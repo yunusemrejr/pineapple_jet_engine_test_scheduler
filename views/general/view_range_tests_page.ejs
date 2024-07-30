@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+ 
+<html lang="en">
+  <head>    <script>
+    const notifyWrapper=(message)=> {
+      notify(message);
+      };
+    
+        </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/media/favicon.ico" />
+    <title>Calendar</title>
+    <link href="/fontawesome-6.4.2/css/fontawesome.css" rel="stylesheet" />
+    <link href="/fontawesome-6.4.2/css/brands.css" rel="stylesheet" />
+    <link href="/fontawesome-6.4.2/css/solid.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/style/scheduling.css" />
+    <link rel="stylesheet" href="style/tasksinrange.css" />
+    <script src="scripts/global_ui.js"></script>
+    <script>
+
+          let GLOBAL_CAN_USER_VIEW_ANY_TEST = parseInt('<%= canUserViewAnyTest %>'); // 0 or 1
+          let GLOBAL_TESTS_IT_CAN_MODIFY = [];
+          const getTestTypeDomValue = (element) => {
+              const pElements = Array.from(element.querySelectorAll('p'));
+              if (pElements.length < 2) return "";
+
+              const testTypeText = pElements[1].innerText || pElements[1].textContent;
+              if (!testTypeText.includes("Test Type:")) return "";
+
+              return testTypeText.replace("Test Type:", '').trim();
+          };
+          const canUserViewThisTestOrBlock = (element, listOfAllowedTestNames) => {
+              const testType = getTestTypeDomValue(element).toLowerCase();
+              const canView = listOfAllowedTestNames.some(name => name.toLowerCase() === testType);
+              if (!canView) {
+                  element.style.display = "none";
+              }else{
+
+              }
+          };
+           const applyUserRestrictions = () => {
+               if (GLOBAL_CAN_USER_VIEW_ANY_TEST ===0 && GLOBAL_TESTS_IT_CAN_MODIFY.length > 0) {
+                   const testsOnScreen = Array.from(document.querySelectorAll(".task"));
+                   testsOnScreen.forEach((test) => {
+                       canUserViewThisTestOrBlock(test, GLOBAL_TESTS_IT_CAN_MODIFY);
+                   });
+               }
+
+           }
+
+           setInterval(applyUserRestrictions, 1000);
+
+          async function returnTheNamesOfTests(testIds) {
+
+              try {
+                  const response = await fetch('/get-id-bindings');
+                  if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                  }
+                  const idBindings = await response.json();
+                  console.log('ID Bindings of tests:', idBindings.testTypes);
+                  return idBindings.testTypes.filter(test => testIds.includes(test.Test_Type_ID)).map(test => test.Test_Type_Name);
+              } catch (error) {
+                  console.error('Fetch ID bindings error:', error);
+                  return [];
+              }
+          }
+
+
+
+          if(GLOBAL_CAN_USER_VIEW_ANY_TEST === 0){
+
+          document.addEventListener('DOMContentLoaded', async function () {
+              let testIds = [];
+              <% testsUserCanModify.forEach(test => { %>
+                testIds.push('<%= test.Tests_It_Can_Modify %>');
+              <% }) %>;
+              console.log("Tests_It_Can_Modify", testIds);
+
+              let hasNoRightToModifyAnyTest = testIds.length < 1;
+
+              if (hasNoRightToModifyAnyTest && canNotViewAnyTest) {
+                  document.body.innerHTML = '<h1>You do not have permission to view any test</h1>';
+              } else {
+                  let testIdsString = testIds.toString();
+                  const testIdsArr = testIdsString.split(',');
+                  testIdsArrInt=testIdsArr.map(Number);
+                  console.log(testIdsArrInt);  // Debugging alert
+
+                  const testsItCanModify = await returnTheNamesOfTests(testIdsArrInt);
+                  console.log("Test NAMES it can modify:", testsItCanModify);
+                  GLOBAL_TESTS_IT_CAN_MODIFY = testsItCanModify;
+                  GLOBAL_TEST_IDS_IT_CAN_MODIFY= testIdsArrInt;
+
+              }
+          });
+
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="/dist/bundle.js"></script>
+    
+    <div>
+      <div class="notification" id="notification">
+        <p id="notificationText"></p>
+      </div>
+    </div>
+    <div>
+      <div class="notificationRed" id="notificationRed">
+        <p id="notificationTextRed"></p>
+      </div>
+    </div>
+    <div id="top-nav">
+      <p style="display: none" id="month-name"></p>
+      <div id="div-for-range-start-dropdowns">
+        <label for="start_day">Day:</label>
+        <select id="start_day"></select>
+        <label for="start_month">Month:</label>
+        <select id="start_month">
+          <option value="0">January</option>
+          <option value="1">February</option>
+          <option value="2">March</option>
+          <option value="3">April</option>
+          <option value="4">May</option>
+          <option value="5">June</option>
+          <option value="6">July</option>
+          <option value="7">August</option>
+          <option value="8">September</option>
+          <option value="9">October</option>
+          <option value="10">November</option>
+          <option value="11">December</option>
+        </select>
+        <label for="start_year">Year:</label>
+        <select id="start_year">
+          <option value="2023">2023</option>
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+          <option value="2026">2026</option>
+          <option value="2027">2027</option>
+          <option value="2028">2028</option>
+          <option value="2029">2029</option>
+          <option value="2030">2030</option>
+        </select>
+      </div>
+      <br />
+      <div id="div-for-range-end-dropdowns">
+        <label for="end_day">Day:</label>
+        <select id="end_day"></select>
+        <label for="end_month">Month:</label>
+        <select id="end_month">
+          <option value="0">January</option>
+          <option value="1">February</option>
+          <option value="2">March</option>
+          <option value="3">April</option>
+          <option value="4">May</option>
+          <option value="5">June</option>
+          <option value="6">July</option>
+          <option value="7">August</option>
+          <option value="8">September</option>
+          <option value="9">October</option>
+          <option value="10">November</option>
+          <option value="11">December</option>
+        </select>
+        <label for="end_year">Year:</label>
+        <select id="end_year">
+          <option value="2023">2023</option>
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+          <option value="2026">2026</option>
+          <option value="2027">2027</option>
+          <option value="2028">2028</option>
+          <option value="2029">2029</option>
+          <option value="2030">2030</option>
+        </select>
+      </div>
+      <button id="Show"><i class="fa-regular fa-eye"></i>&nbsp;Show</button>
+    </div>
+    <div id="logosdiv">
+      <img class="logo" src="/media/pineapple_Logo.png" />
+      <img class="logo" id="asp" src="/media/asp.png" />
+    </div>
+    <button id="goBackButton">
+      <i class="fa-solid fa-backward"></i>&nbsp;Go Back
+    </button>
+    <div id="calendar" class="calendar"><div id="tasks-container"></div></div>
+
+    <script src="scripts/view_range_tests_page.js"></script>
+    <img src="/media/calender-bg.png" class="bg-img" />
+    <div style="display: none" id="timeDiv"></div>
+    <script src="scripts/loader.js"></script>
+
+    <script src="scripts/allowUI.js"></script>
+    <section id="UI-BLOCKER">
+      <h1>
+        PLEASE ENABLE JAVASCRIPT ON YOUR BROWSER TO USE SCHEDULER ASSISTANT.
+        ACCESS HAS BEEN BLOCKED UNTIL JAVASCRIPT IS ENABLED ON YOUR BROWSER.
+      </h1>
+      <br />
+      <p
+        style="
+          background-color: rgb(0, 0, 0);
+          padding: 10px;
+          border-radius: 10px;
+          width: 150px;
+        "
+      >
+        <a
+          style="
+            text-shadow: none;
+            color: rgb(204, 213, 255);
+            background: none;
+            border: none;
+          "
+          href="https://www.enable-javascript.com/"
+          >Learn how.</a
+        >
+      </p>
+      <img src="media/jslogo.png" class="bg-img" />
+    </section>
+  </body>
+</html>

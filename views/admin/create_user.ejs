@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+ 
+
+<html>
+  <head><script src="scripts/global_ui.js"></script>
+    <title>Create User - Test Scheduler</title>
+    <link rel="stylesheet" href="/style/create_user.css" />
+    <link href="/fontawesome-6.4.2/css/fontawesome.css" rel="stylesheet" />
+    <link href="/fontawesome-6.4.2/css/brands.css" rel="stylesheet" />
+    <link href="/fontawesome-6.4.2/css/solid.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="media/favicon.ico" />    <script>
+      const notifyWrapper=(message)=> {
+        notify(message);
+        };
+      
+          </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="/dist/bundle.js"></script>
+    
+    <button id="goBackButton">
+      <i class="fa-solid fa-arrow-left"></i>&nbsp;Go Back
+    </button>
+    <script>
+      // Go Back Button
+      document
+        .getElementById("goBackButton")
+        .addEventListener("click", function () {
+          window.location.href = "/admin-panel-page"; // Adjust this path if necessary
+        });
+    </script>
+    <img class="logo" src="media/pineapple_Logo.png" />
+    <img class="logo" id="asp" src="media/asp.png" />
+    <br /><br /><br /><br /><br /><br />
+    <br />
+    <h1 id="create-user-title">Create New User</h1>
+    <br /><br />
+
+    <% if (typeof message !== 'undefined') { %>
+    <p class="message"><%= message %></p>
+    <% } %>
+
+    <form method="post" action="/create_user">
+      <label for="username"
+        ><i class="fa-solid fa-user"></i>&nbsp;Username:</label
+      >
+      <input type="text" id="username" name="username" required />
+      <br />
+      <label for="password"
+        ><i class="fa-solid fa-key"></i>&nbsp;Password:</label
+      >
+      <input type="password" id="password" name="password" required />
+      <br />
+
+      <input
+        type="number"
+        id="access_type_id"
+        name="access_type_id"
+        style="display: none"
+        value="javascript:document.querySelector('#role_id').value"
+      />
+
+      <label for="role_id"
+        ><i class="fa-solid fa-user-tag"></i>&nbsp;Role ID:
+        <button id="showRoleIdList">Show Role List</button></label
+      >
+      <input type="number" id="role_id" name="role_id" />
+      <br />
+
+      <label for="tests_it_can_modify"
+        ><i class="fa-solid fa-user-tag"></i>&nbsp;Tests It Can Modify (seperate
+        test IDs by commas):
+        <button id="showTestIdList">Show Test List</button></label
+      >
+      <input type="text" id="tests_it_can_modify" name="tests_it_can_modify" />
+      <br />
+      <label for="can_view_any_test"
+        ><i class="fa-solid fa-user-tag"></i>&nbsp;Can View Any Test:</label
+      >
+      <select id="can_view_any_test" name="can_view_any_test" required>
+        <option value="1">Yes</option>
+        <option value="0">No</option>
+      </select>
+      <br />
+
+      <button type="submit">
+        <i class="fa-solid fa-right-to-bracket"></i>&nbsp;Create User
+      </button>
+    </form>
+    <div id="box" style="display: none">
+      <button
+        onclick="javascript:document.querySelector('#box').style.display='none'"
+      >
+        x
+      </button>
+    </div>
+
+    <script src="scripts/admin_create_user.js"></script>
+
+    <style>
+      .bg-img {
+        position: fixed;
+        display: flex;
+        top: 0;
+        left: 0;
+        opacity: 0.2;
+        width: 110vw;
+        height: 100vh;
+        z-index: -1;
+      }
+    </style>
+    <img src="media/calender-bg.png" class="bg-img" />
+
+    <script src="scripts/allowUI.js"></script>
+    <section id="UI-BLOCKER">
+      <h1>
+        PLEASE ENABLE JAVASCRIPT ON YOUR BROWSER TO USE SCHEDULER ASSISTANT.
+        ACCESS HAS BEEN BLOCKED UNTIL JAVASCRIPT IS ENABLED ON YOUR BROWSER.
+      </h1>
+      <br />
+      <p
+        style="
+          background-color: rgb(0, 0, 0);
+          padding: 10px;
+          border-radius: 10px;
+          width: 150px;
+        "
+      >
+        <a
+          style="
+            text-shadow: none;
+            color: rgb(204, 213, 255);
+            background: none;
+            border: none;
+          "
+          href="https://www.enable-javascript.com/"
+          >Learn how.</a
+        >
+      </p>
+      <img src="media/jslogo.png" class="bg-img" />
+    </section>
+  </body>
+</html>

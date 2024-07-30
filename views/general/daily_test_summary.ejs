@@ -1,0 +1,203 @@
+ 
+<html lang="en">
+<head> 
+    <script src="scripts/global_ui.js"></script>
+    <script>
+    const notifyWrapper=(message)=> {
+      notify(message);
+      };
+    
+        </script>
+    <meta charset="UTF-8">
+    <title>Daily Test Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        label, button {
+            font-size: 16px;
+        }
+
+        input[type="date"] {
+            font-size: 16px;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            color: white;
+            background: rgb(46, 215, 52);
+           
+            background: linear-gradient(
+              180deg,
+              rgb(15, 125, 92) 7%,
+              rgb(0, 189, 110) 100%
+            );            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #0e2f52;
+        }
+        button a{
+            color: wheat;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4e4e4e;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul li {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script src="/dist/bundle.js"></script>
+    
+    <button><a href="/main-selection-page">Go Back</a></button>
+    <h1>Daily Test Summary</h1>
+
+    <label for="dateInput">Select Date: </label>
+    <input type="date" id="dateInput">
+    <button onclick="fetchDailyTestSummary()">Get Summary</button>
+
+    <table id="summaryTable" style="display: none;">
+        <thead>
+            <tr>
+                <th>Status ID</th>
+                <th>Test Name</th>
+                <th>Test ID</th>
+                <th>Date</th>
+                <th>Hour</th>
+                <th>Resource Type ID</th>
+                <th>Resource Used</th>
+                <th>Resource Limit</th>
+                <th>Available Resource</th>
+                <th>Additional Tests Possible</th>
+                <th>Predefined Limits</th>
+            </tr>
+        </thead>
+        <tbody id="summaryTableBody">
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchDailyTestSummary() {
+            const dateInput = document.getElementById('dateInput').value;
+            if (!dateInput) {
+                notifyWrapper('Please select a date');
+                return;
+            }
+
+            const response = await fetch(`/get-daily-test-summary/${dateInput}`);
+            const dailyTests = await response.json();
+
+            const tableBody = document.getElementById('summaryTableBody');
+            tableBody.innerHTML = '';
+
+            dailyTests.forEach(test => {
+                Object.keys(test.Resources).forEach(resourceId => {
+                    const row = document.createElement('tr');
+
+                    const statusIdCell = document.createElement('td');
+                    statusIdCell.textContent = test.Status_ID;
+                    row.appendChild(statusIdCell);
+
+                    const testNameCell = document.createElement('td');
+                    testNameCell.textContent = test.Test_Type_Name;
+                    row.appendChild(testNameCell);
+
+                    const testIdCell = document.createElement('td');
+                    testIdCell.textContent = test.Test_Type_ID;
+                    row.appendChild(testIdCell);
+
+                    const dateCell = document.createElement('td');
+                    dateCell.textContent = new Date(test.Date).toISOString().split('T')[0];
+                    row.appendChild(dateCell);
+
+                    const hourCell = document.createElement('td');
+                    hourCell.textContent = test.Hour;
+                    row.appendChild(hourCell);
+
+                    const resourceTypeIdCell = document.createElement('td');
+                    resourceTypeIdCell.textContent = resourceId;
+                    row.appendChild(resourceTypeIdCell);
+
+                    const resourceUsedCell = document.createElement('td');
+                    resourceUsedCell.textContent = test.Resources[resourceId].Resource_Used;
+                    row.appendChild(resourceUsedCell);
+
+                    const resourceLimitCell = document.createElement('td');
+                    resourceLimitCell.textContent = test.Resources[resourceId].Limit;
+                    row.appendChild(resourceLimitCell);
+
+                    const availableResourceCell = document.createElement('td');
+                    availableResourceCell.textContent = test.AvailableResources[resourceId];
+                    row.appendChild(availableResourceCell);
+
+                    const additionalTestsCell = document.createElement('td');
+                    additionalTestsCell.textContent = test.AdditionalTestsPossible[resourceId];
+                    row.appendChild(additionalTestsCell);
+
+                    const predefinedLimitsCell = document.createElement('td');
+                    predefinedLimitsCell.innerHTML = `
+                        <strong>Name:</strong> ${test.PredefinedLimits.Predefined_Hourly_Limit_Name}<br>
+                        <strong>Trigger Hours:</strong> ${test.PredefinedLimits.Trigger_Hours_List.join(', ')}<br>
+                        <strong>Resources:</strong>
+                        <ul>
+                            ${test.PredefinedLimits.Resources.map(r => `<li>ID: ${r.resourceId}, Limit: ${r.limitValue}</li>`).join('')}
+                        </ul>
+                    `;
+                    row.appendChild(predefinedLimitsCell);
+
+                    tableBody.appendChild(row);
+                });
+            });
+
+            document.getElementById('summaryTable').style.display = 'table';
+        }
+    </script>
+</body>
+</html>

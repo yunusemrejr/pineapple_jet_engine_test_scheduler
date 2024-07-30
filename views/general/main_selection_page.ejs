@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<!--
+/***************************************************************************
+ * 
+ * Copyright (c) 2024, TEI.
+ * 
+ * All rights reserved.
+ * 
+ * This code is developed by Yunus Emre Vurgun of ASP OTOMASYON A.S. for TEI.
+ * 
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are not permitted unless expressly authorized by the 
+ * copyright holder.
+ * 
+ ***************************************************************************/
+-->
+
+<html lang="en">
+  <head>  <script src="scripts/global_ui.js"></script>  <script>
+    const notifyWrapper=(message)=> {
+      notify(message);
+      };
+    
+        </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="media/favicon.ico" />
+    <title>Main Selection Menu</title>
+    <link href="/fontawesome-6.4.2/css/fontawesome.css" rel="stylesheet" />
+    <link href="/fontawesome-6.4.2/css/brands.css" rel="stylesheet" />
+    <link href="/fontawesome-6.4.2/css/solid.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="style/main_selection_page.css" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script src="/dist/bundle.js"></script>
+    
+    <div style="display: none">
+      <p>User ID: <%= user.User_ID %></p>
+      <p>User Role: <%= user.userRole %></p>
+      <p>User Permissions: <%= JSON.stringify(user.userPermissions) %></p>
+
+      <p>Is User Admin: <%= isUserAdmin %></p>
+      <p>Can User Create: <%= canUserCreate %></p>
+      <p>Can User Edit: <%= canUserEdit %></p>
+      <p>Can User Delete: <%= canUserDelete %></p>
+
+      <h2>Tests User Can Modify:</h2>
+      <ul id="testsUserCanModify" style="display: none">
+        <% testsUserCanModify.forEach(test => { %>
+        <li><%= test.Tests_It_Can_Modify %></li>
+        <% }) %>
+      </ul>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          let testIds = [];
+          <% testsUserCanModify.forEach(test => { %>
+            testIds.push('<%= test.Tests_It_Can_Modify %>');
+          <% }) %>;
+          console.log(testIds);
+         const userRole="<%= user.userRole %>";
+
+          if(!userRole.includes("1")){
+               document.querySelector('#options a[href="/admin-panel-page"]').style.display="none";
+          }
+          if(!userRole.includes("2") && !userRole.includes("1")){
+              document.querySelector('#options a[href="/tests-crud-page"]').style.display="none";
+           }
+       });
+    </script>
+
+    <div id="logosdiv">
+      <img class="logo" src="media/pineapple_Logo.png" />
+      <img class="logo" id="asp" src="media/asp.png" />
+    </div>
+
+    <h1>
+      Welcome to Pineapple Flying Crazy People Scheduler <%- JSON.stringify(user.Username).replace(/"/g, '')
+      %>;
+    </h1>
+
+    <div id="options">
+      <% if(user.Access_Type_ID === 1) { %>
+      <a id="admin" href="/admin-panel-page"
+        ><i class="fa-solid fa-gear"></i>&nbsp; Admin Panel</a
+      >
+      <% } %>
+
+      <a href="/tests-crud-page"
+        ><i class="fa-solid fa-pen-to-square"></i>&nbsp; Edit Tests /
+        C.R.U.D.</a
+      >
+      <a href="/view-active-tests-page"
+        ><i class="fa-solid fa-table-list"></i>&nbsp; View Active Tests</a
+      >
+      <a href="/view-range-tests-page"
+        ><i class="fa-solid fa-calendar-days"></i>&nbsp; View Tests in a
+        Range</a
+      >
+    </div>
+
+    <button id="logoutButton" onclick="javascript:location.href='/auth/logout'">
+      <i class="fa-solid fa-right-from-bracket"></i>&nbsp;Log out
+    </button>
+
+    <img src="media/calender-bg.png" class="bg-img" />
+    <script src="scripts/main_selection_page.js"></script>
+    <script src="scripts/loader.js"></script>
+    <script src="scripts/allowUI.js"></script>
+    <section id="UI-BLOCKER">
+      <h1>
+        PLEASE ENABLE JAVASCRIPT ON YOUR BROWSER TO USE SCHEDULER ASSISTANT.
+        ACCESS HAS BEEN BLOCKED UNTIL JAVASCRIPT IS ENABLED ON YOUR BROWSER.
+      </h1>
+      <br />
+      <p
+        style="
+          background-color: rgb(0, 0, 0);
+          padding: 10px;
+          border-radius: 10px;
+          width: 150px;
+        "
+      >
+        <a
+          style="
+            text-shadow: none;
+            color: rgb(204, 213, 255);
+            background: none;
+            border: none;
+          "
+          href="https://www.enable-javascript.com/"
+          >Learn how.</a
+        >
+      </p>
+      <img src="media/jslogo.png" class="bg-img" />
+    </section>
+  </body>
+</html>

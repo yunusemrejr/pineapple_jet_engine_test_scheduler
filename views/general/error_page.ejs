@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+ 
+
+<html lang="en">
+  <head>    <script src="scripts/global_ui.js"></script>
+
+    <link rel="stylesheet" href="style/error.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error</title>
+    <link href="/fontawesome-6.4.2/css/fontawesome.css" rel="stylesheet" />
+    <link href="/fontawesome-6.4.2/css/brands.css" rel="stylesheet" />
+    <link href="/fontawesome-6.4.2/css/solid.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <style>
+
+
+      body {
+        background-color: #798893; /* Red background color */
+        color: #fff; /* White text color */
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      header {
+        background-color: #798893; /* Darker red header background color */
+        padding: 20px 0;
+        text-align: center;
+      }
+
+      header h1 {
+        font-size: 36px;
+        margin: 0;
+      }
+
+      #top-nav {
+        text-align: right;
+      }
+
+      .logo {
+        display: inline-block;
+        width: 100px;
+        filter: drop-shadow(5px 5px 7px rgba(0, 0, 0, 0.5));
+      }
+
+      main {
+        padding: 20px;
+        text-align: center;
+      }
+
+      .error-container {
+        background-color: #fff; /* White background color for the error container */
+        border-radius: 10px; /* Rounded corners */
+        padding: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Shadow effect */
+      }
+
+      .error-container h1 {
+        font-size: 24px;
+        color: #e74c3c; /* Red text color */
+
+        filter: drop-shadow(2px 1px 3px rgb(255, 211, 211));
+      }
+
+      .error-message {
+        font-family: "Courier New", Courier, monospace;
+        font-size: 22px;
+        margin-top: 20px;
+        color: #003449; /* Red text color */
+      }
+
+      .notification_err {
+        background-color: #e74c3c;
+        color: white;
+        text-align: center;
+        padding: 5px;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 999999999;
+        pointer-events: none;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      footer {
+        background-color: #333; /* Dark background color for the footer */
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+      }
+
+      #shutdown {
+        font-size: large;
+        color: white;
+        background-color: #bf4639;
+        border: 0;
+        border-radius: 5px;
+        filter: drop-shadow(5px 5px 3px gray);
+        padding: 10px;
+      }
+
+      #back-to-login {
+        font-size: large;
+        color: white;
+        background-color: #2f6785;
+        border: 0;
+        border-radius: 5px;
+        filter: drop-shadow(5px 5px 3px gray);
+        padding: 10px;
+        margin-right: 150px;
+      }
+
+      @keyframes gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(-45deg, #164863, #bf4639, #9bbec8, #ddf2fd);
+        background-size: 400% 400%;
+
+        animation: gradient 15s ease infinite;
+      }
+
+      header {
+        background: linear-gradient(-45deg, #d7d7d7, #ffffff, #103b77, #ffffff);
+        background-size: 400% 400%;
+        box-shadow: 0px 0px 10px rgba(30, 39, 70, 0.8); /* Shadow effect */
+      }
+
+      #gear {
+        display: flex;
+        position: fixed;
+        width: 500px;
+        bottom: 0;
+        left: 0;
+        z-index: -999;
+        opacity: 0.5;
+      } /* Back login */
+      #back-to-login {
+        transform: translatex(88px) translatey(0px);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div id="top-nav">
+        <img class="logo" src="media/pineapple_Logo.png" />
+        <img class="logo" id="asp" src="media/asp.png" />
+      </div>
+    </header>
+    <main>
+      <section class="error-container">
+        <h1>
+          <i class="fa-solid fa-triangle-exclamation"></i>&nbsp;An Error
+          Occurred During the Process
+        </h1>
+        <p class="error-message" id="output">
+          <i class="fa-solid fa-circle-info"></i>&nbsp;
+        </p>
+        <p class="error-message">
+          <i class="fa-solid fa-rotate"></i>&nbsp;Independently from the error
+          above, you MAY need to restart this application.
+        </p>
+        <br /><br /><br />
+
+        <button id="back-to-login" onclick="loginPage()">
+          <i class="fa-solid fa-user"></i>&nbsp;Try Entering Credentials Again
+        </button>
+
+        <button id="shutdown" style="display: none" onclick="shutdown()">
+          <i class="fa-solid fa-power-off"></i>&nbsp;Shut Down The Scheduler
+        </button>
+      </section>
+    </main>
+
+    <script>
+      function loginPage() {
+        window.location.assign("/auth/login");
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const params = new URLSearchParams(window.location.search);
+        const msg = params.get("msg");
+        if (msg) {
+          document.getElementById("output").innerHTML +=
+            "<b>Server says:</b> " + msg;
+        } else {
+          document.getElementById("output").innerHTML = "Unknown error.";
+        }
+      });
+
+      function shutdown() {
+        fetch("/exit", {
+          method: "POST",
+        }).then((response) => {
+          if (response.status === 200) {
+            setTimeout(() => {
+              naviAlert("Successfully Triggered backend exit process.");
+              window.location.href = window.location.href;
+            }, 2000);
+            // alert('Backend exit process initiated successfully.');
+          } else {
+            naviAlert("Failed to initiate backend exit process.");
+          }
+        });
+
+        setInterval(() => {
+          window.location.href = window.location.href;
+        }, 2000);
+      }
+    </script>
+
+    <img src="/gear.png" id="gear" class="gear" />
+    <script src="scripts/allowUI.js"></script>
+    <section id="UI-BLOCKER">
+      <h1>
+        PLEASE ENABLE JAVASCRIPT ON YOUR BROWSER TO USE SCHEDULER ASSISTANT.
+        ACCESS HAS BEEN BLOCKED UNTIL JAVASCRIPT IS ENABLED ON YOUR BROWSER.
+      </h1>
+      <br />
+      <p
+        style="
+          background-color: rgb(0, 0, 0);
+          padding: 10px;
+          border-radius: 10px;
+          width: 150px;
+        "
+      >
+        <a
+          style="
+            text-shadow: none;
+            color: rgb(204, 213, 255);
+            background: none;
+            border: none;
+          "
+          href="https://www.enable-javascript.com/"
+          >Learn how.</a
+        >
+      </p>
+      <img src="media/jslogo.png" class="bg-img" />
+    </section>
+  </body>
+</html>

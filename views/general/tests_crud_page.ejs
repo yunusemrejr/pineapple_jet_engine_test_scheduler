@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+ 
+<html lang="en">
+  <head>
+    <link rel="icon" type="image/x-icon" href="media/favicon.ico" />
+
+    <script>
+      let GLOBAL_TEST_CAN_MODIFY = null;
+      let GLOBAL_USER_ROLE = parseInt('<%= user.userRole %>');
+      let GLOBAL_USER_PERMISSIONS = JSON.parse('<%= JSON.stringify(user.userPermissions) %>');
+      let GLOBAL_CAN_USER_CREATE = ('<%= canUserCreate %>') === "true";
+      let GLOBAL_CAN_USER_EDIT = ('<%= canUserEdit %>') === "true";
+      let GLOBAL_CAN_USER_DELETE = ('<%= canUserDelete %>') === "true";
+      let GLOBAL_CAN_USER_VIEW_ANY_TEST = parseInt('<%= canUserViewAnyTest %>'); // 0 or 1
+      let GLOBAL_TESTS_IT_CAN_MODIFY = [];
+      let GLOBAL_TEST_IDS_IT_CAN_MODIFY = [];
+
+      const getTestTypeDomValue = (element) => {
+          const pElements = Array.from(element.querySelectorAll('p'));
+          if (pElements.length < 2) return "";
+
+          const testTypeText = pElements[1].innerText || pElements[1].textContent;
+          if (!testTypeText.includes("Test Type:")) return "";
+
+          return testTypeText.replace("Test Type:", '').trim();
+      };
+
+      const canUserViewThisTestOrBlock = (element, listOfAllowedTestNames) => {
+          const testType = getTestTypeDomValue(element).toLowerCase();
+          const canView = listOfAllowedTestNames.some(name => name.toLowerCase() === testType);
+          if (!canView) {
+              element.style.display = "none";
+          }
+      };
+
+
+      const applyUserRestrictions = () => {
+          if (!GLOBAL_CAN_USER_CREATE) {
+              const addNewTestElement = document.getElementById("addNewTest");
+              if (addNewTestElement) addNewTestElement.style.display = "none";
+          } else {
+              const pattern = GLOBAL_TEST_IDS_IT_CAN_MODIFY.length > 0
+                  ? `^(${GLOBAL_TEST_IDS_IT_CAN_MODIFY.join('|')})$`
+                  : "^$"; // This will disallow any input if the array is empty
+
+              const testTypeIdInput = document.querySelector('#testTypeId');
+              testTypeIdInput.setAttribute('pattern', pattern);
+              testTypeIdInput.addEventListener('input', (event) => {
+                  const value = event.target.value;
+                  const regex = new RegExp(pattern);
+                  if (!regex.test(value)) {
+                      event.target.value = value.slice(0, -1);
+                  }
+              });
+          }
+
+          if (document.querySelector('#canUserEdit').innerText !== "true") {
+              Array.from(document.getElementsByClassName("editbtn")).forEach(btn => btn.style.display = "none");
+          }
+
+          if (document.querySelector('#canUserDelete').innerText !== "true") {
+              Array.from(document.getElementsByClassName("deletebtn")).forEach(btn => btn.style.display = "none");
+          }
+
+          if (GLOBAL_CAN_USER_VIEW_ANY_TEST === 0) { //IS IT FALSE? IF SO, USER CAN'T VIEW ALL TESTS
+
+              const testsOnScreen = Array.from(document.querySelectorAll(".task"));
+              testsOnScreen.forEach((test) => {
+                  canUserViewThisTestOrBlock(test, GLOBAL_TESTS_IT_CAN_MODIFY)
+              });
+          }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+          setInterval(applyUserRestrictions, 1000);
+
+      });
+
+      async function returnTheNamesOfTests(testIds) {
+
+          try {
+              const response = await fetch('/get-id-bindings');
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              const idBindings = await response.json();
+              console.log('ID Bindings of tests:', idBindings.testTypes);
+              return idBindings.testTypes.filter(test => testIds.includes(test.Test_Type_ID)).map(test => test.Test_Type_Name);
+          } catch (error) {
+              console.error('Fetch ID bindings error:', error);
+              return [];
+          }
+      }
+      document.addEventListener('DOMContentLoaded', async function () {
+          let testIds = [];
+              <% testsUserCanModify.forEach(test => { %>
+              testIds.push('<%= test.Tests_It_Can_Modify %>');
+              <% }) %>;
+          console.log("Tests_It_Can_Modify", testIds);
+
+          let hasNoRightToModifyAnyTest = testIds.length < 1;
+          let canNotViewAnyTest = document.querySelector('#canUserViewAnyTest').textContent.trim() !== "1";
+
+          if (hasNoRightToModifyAnyTest && canNotViewAnyTest) {
+              document.body.innerHTML = '<h1>You do not have permission to modify or view any test</h1>';
+          } else {
+              let testIdsString = testIds.toString();
+              const testIdsArr = testIdsString.split(',');
+              testIdsArrInt = testIdsArr.map(Number);
+              console.log(testIdsArrInt);  // Debugging alert
+
+              const testsItCanModify = await returnTheNamesOfTests(testIdsArrInt);
+              GLOBAL_TEST_CAN_MODIFY = testsItCanModify;
+              console.log("Test NAMES it can modify:", testsItCanModify);
+              GLOBAL_TESTS_IT_CAN_MODIFY = testsItCanModify;
+              GLOBAL_TEST_IDS_IT_CAN_MODIFY = testIdsArrInt;
+              if (testsItCanModify.length > 0) {
+                  const testList = document.createElement('ul');
+                  testList.setAttribute('id', 'test-user-can-modify');
+
+                  const listText = document.createElement('p');
+                  listText.innerHTML = "<i style=\"color:greenyellow;font-size:22px; \" class=\"fa-solid fa-person-circle-check\"></i> You can work with: ";
+                  testList.appendChild(listText);
+                  document.body.appendChild(testList);
+
+                  testsItCanModify.forEach(testName => {
+                      const listItem = document.createElement('li');
+                      listItem.setAttribute('class', 'test-type');
+                      listItem.textContent = testName;
+                      testList.appendChild(listItem);
+                  });
+
+
+              }
+          }
+      });
+
+
+      const modifyCheck = (GLOBAL_TEST_CAN_MODIFY) => {
+          const tasks = document.querySelectorAll('.task');
+
+          tasks.forEach((task) => {
+              const shouldKeep = GLOBAL_TEST_CAN_MODIFY.some(i => task.innerHTML.includes(i));
+              if (!shouldKeep) {
+                  task.querySelector('.editbtn').remove();
+              }
+          });
+
+          if (GLOBAL_TEST_CAN_MODIFY.length === 0) {
+              tasks.forEach((task) => {
+
+                  task.querySelector('.editbtn').remove();
+
+              });
+          }
+      };
+
+      setInterval(() => { modifyCheck(GLOBAL_TEST_CAN_MODIFY); }, 1000)
+    </script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="media/favicon.ico" />
+    <title>Edit Tests CRUD Panel</title>
+    <link href="/fontawesome-6.4.2/css/fontawesome.css" rel="stylesheet" />
+    <link href="/fontawesome-6.4.2/css/brands.css" rel="stylesheet" />
+    <link href="/fontawesome-6.4.2/css/solid.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/style/scheduling.css" />
+    <link rel="stylesheet" href="/style/tests_crud_page.css" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script src="/dist/bundle.js"></script>
+  
+    <div style="display: none">
+      <p id="userId"><%= user.User_ID %></p>
+      <p id="userRole"><%= user.userRole %></p>
+      <p id="userPermissions"><%= JSON.stringify(user.userPermissions) %></p>
+      <p id="isUserAdmin"><%= isUserAdmin %></p>
+      <p id="canUserCreate"><%= canUserCreate %></p>
+      <p id="canUserEdit"><%= canUserEdit %></p>
+      <p id="canUserDelete"><%= canUserDelete %></p>
+      <p id="canUserViewAnyTest"><%= canUserViewAnyTest %></p>
+
+      <h2>Tests User Can Modify:</h2>
+      <ul id="testsUserCanModify" style="display: none">
+        <% testsUserCanModify.forEach(test=> { %>
+        <li><%= test.Tests_It_Can_Modify %></li>
+        <% }) %>
+      </ul>
+    </div>
+    <div>
+      <div class="notification" id="notification">
+        <p id="notificationText"></p>
+      </div>
+    </div>
+    <div>
+      <div class="notificationRed" id="notificationRed">
+        <p id="notificationTextRed"></p>
+      </div>
+    </div>
+    <div id="top-nav">
+      <p style="display: none" id="month-name"></p>
+      <label for="day">Day:</label>
+      <select id="day">
+        <!-- Options will be dynamically populated -->
+      </select>
+      <label for="month">Month:</label>
+      <select id="month">
+        <option value="0">January</option>
+        <option value="1">February</option>
+        <option value="2">March</option>
+        <option value="3">April</option>
+        <option value="4">May</option>
+        <option value="5">June</option>
+        <option value="6">July</option>
+        <option value="7">August</option>
+        <option value="8">September</option>
+        <option value="9">October</option>
+        <option value="10">November</option>
+        <option value="11">December</option>
+      </select>
+      <label for="year">Year:</label>
+      <select id="year">
+        <option value="2023">2023</option>
+        <option value="2024">2024</option>
+        <option value="2025">2025</option>
+        <option value="2026">2026</option>
+        <option value="2027">2027</option>
+        <option value="2028">2028</option>
+        <option value="2029">2029</option>
+        <option value="2030">2030</option>
+      </select>
+      <button id="Show"><i class="fa-regular fa-eye"></i>&nbsp;Show</button>
+      <button id="addNewTest">
+        <i class="fa-regular fa-plus"></i>&nbsp;Add New Test
+      </button>
+      <button id="showHourlyLimits">
+        <i class="fa-regular fa-clock"></i>&nbsp;Show Hourly Limits
+      </button>
+      <button id="showIdBindings">
+        <i class="fa-regular fa-id-card"></i>&nbsp;Show ID Bindings
+      </button>
+      
+    </div>
+    <div id="logosdiv">
+      <img class="logo" src="/media/pineapple_Logo.png" />
+      <img class="logo" id="asp" src="/media/asp.png" />
+    </div>
+    <button id="goBackButton">
+      <i class="fa-solid fa-backward"></i>&nbsp;Go Back
+    </button>
+    <div id="tasks-container"></div>
+    <div id="id-bindings-container" style="display: none">
+      <span onclick="hideBindings()" class="close2">&times;</span>
+      <h3>ID Bindings</h3>
+      <div id="test-type-bindings"></div>
+      <div id="user-bindings"></div>
+      <div id="resource-types-bindings"></div>
+      <div id="resource-limits-bindings"></div>
+    </div>
+    <!-- Add/Edit Task Modal -->
+    <!-- Add/Edit Task Modal -->
+    <div id="taskModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <form id="taskForm">
+          <label for="testTypeId">Test Type ID:</label>
+          <input type="number" id="testTypeId" name="testTypeId" required />
+          <label for="taskDate">Date:</label>
+          <input type="date" id="taskDate" name="taskDate" required />
+          <label for="taskHour"
+            >Hour:
+            <span
+              id="taskHourSpan"
+              onclick="dateRangeModeForAdd()"
+              style="
+                font-size: 12px;
+                color: rgb(124, 0, 99);
+                font-weight: bold;
+                text-decoration: underline;
+              "
+            >
+              or enter specific duration</span
+            ></label
+          >
+          <input type="number" id="taskHour" name="taskHour" required />
+          <label for="userId">User ID:</label>
+          <label id="userId"> <%= user ? user.User_ID : '' %> </label>
+
+          <!-- Resource Limits and Usages -->
+          <div id="resource-container">
+            <h3>Resource Usages</h3>
+            <div id="resource-fields"></div>
+          </div>
+
+          <input type="hidden" id="taskId" />
+          <button type="submit" id="taskSubmitButton">Add Task</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="scripts/tests_crud_page.js"></script>
+    <script src="scripts/crud_page_specific_duration.js"></script>
+
+    <img src="/media/calender-bg.png" class="bg-img" />
+    <div style="display: none" id="timeDiv"></div>
+    
+    <script src="scripts/crud_page_resource_limit_checker.js"></script>
+    <script src="scripts/global_ui.js"></script>
+    <script src="scripts/loader.js"></script>
+    <script src="scripts/allowUI.js"></script>
+    <section id="UI-BLOCKER">
+      <h1>
+        PLEASE ENABLE JAVASCRIPT ON YOUR BROWSER TO USE SCHEDULER ASSISTANT.
+        ACCESS HAS BEEN BLOCKED UNTIL JAVASCRIPT IS ENABLED ON YOUR BROWSER.
+      </h1>
+      <br />
+      <p
+        style="
+          background-color: rgb(0, 0, 0);
+          padding: 10px;
+          border-radius: 10px;
+          width: 150px;
+        "
+      >
+        <a
+          style="
+            text-shadow: none;
+            color: rgb(204, 213, 255);
+            background: none;
+            border: none;
+          "
+          href="https://www.enable-javascript.com/"
+          >Learn how.</a
+        >
+      </p>
+      <img src="media/jslogo.png" class="bg-img" />
+    </section>
+   <script src="scripts/crud_page_exceed_killer.js"></script>
+    <button id="showDailyTestSummary" onclick="javascript:window.open('/daily-test-summary','_blank') ">
+      <i class="fa-solid fa-clipboard-list"></i>&nbsp;Daily Test Summary Screen
+    </button>
+  </body>
+</html>

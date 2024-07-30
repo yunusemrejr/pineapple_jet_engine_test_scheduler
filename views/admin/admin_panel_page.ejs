@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+ 
+
+<html lang="en">
+  <head><script src="scripts/global_ui.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="media/favicon.ico" />
+    <title>Calendar</title>
+    <link href="/fontawesome-6.4.2/css/fontawesome.css" rel="stylesheet" />
+    <link href="/fontawesome-6.4.2/css/brands.css" rel="stylesheet" />
+    <link href="/fontawesome-6.4.2/css/solid.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="style/admin_panel_page.css" />
+    <script>
+const notifyWrapper=(message)=> {
+  notify(message);
+  };
+
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script src="/dist/bundle.js"></script>
+    
+    <div id="logosdiv">
+      <img class="logo" src="media/pineapple_Logo.png" />
+      <img class="logo" id="asp" src="media/asp.png" />
+    </div>
+
+    <button id="goBackButton">
+      <i class="fa-solid fa-backward"></i>&nbsp;Go Back
+    </button>
+    <h1>Welcome Administrator!</h1>
+
+    <div id="options">
+      <a href="edit-predefined"
+        ><i class="fa-solid fa-pen-to-square"></i>&nbsp; Edit Predefined
+        <i>(limits,usages)</i></a
+      >
+      <a href="edit-users-page"
+        ><i class="fa-solid fa-pen-to-square"></i>&nbsp; Edit Existing Users</a
+      >
+      <a href="edit-roles-page"
+        ><i class="fa-solid fa-pen-to-square"></i>&nbsp; Edit User Roles</a
+      >
+      <a href="edit-test-types-page"
+        ><i class="fa-solid fa-pen-to-square"></i>&nbsp; Edit Test Types</a
+      >
+      <a href="edit-resource-types-page"
+        ><i class="fa-solid fa-pen-to-square"></i>&nbsp; Edit Resource Types</a
+      >
+
+      <a href="create_user"
+        ><i class="fa-solid fa-user-plus"></i>&nbsp; Create New User</a
+      >
+
+      <a href="view-permissions-list-page"
+        ><i class="fa-solid fa-list"></i>&nbsp; View Default Permission Types</a
+      >
+      <a id="shutdown-btn"
+        ><i class="fa-solid fa-power-off"></i>&nbsp; Shutdown Application for
+        EVERYONE</a
+      >
+    </div>
+
+    <button id="logoutButton" onclick="javascript:location.href='/auth/logout'">
+      <i class="fa-solid fa-right-from-bracket"></i>&nbsp;Log out
+    </button>
+
+    <img src="media/calender-bg.png" class="bg-img" />
+    <script src="scripts/admin_panel_page.js"></script>
+    <script src="scripts/allowUI.js"></script>
+
+    <section id="UI-BLOCKER">
+      <h1>
+        PLEASE ENABLE JAVASCRIPT ON YOUR BROWSER TO USE SCHEDULER ASSISTANT.
+        ACCESS HAS BEEN BLOCKED UNTIL JAVASCRIPT IS ENABLED ON YOUR BROWSER.
+      </h1>
+      <br />
+      <p
+        style="
+          background-color: rgb(0, 0, 0);
+          padding: 10px;
+          border-radius: 10px;
+          width: 150px;
+        "
+      >
+        <a
+          style="
+            text-shadow: none;
+            color: rgb(204, 213, 255);
+            background: none;
+            border: none;
+          "
+          href="https://www.enable-javascript.com/"
+          >Learn how.</a
+        >
+      </p>
+      <img src="media/jslogo.png" class="bg-img" />
+    </section>
+  </body>
+</html>

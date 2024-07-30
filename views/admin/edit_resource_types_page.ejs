@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+ 
+<html lang="en">
+  <head><script src="scripts/global_ui.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Resource Types</title>
+    <link rel="stylesheet" href="/style/editresourcetypes.css" />    <script>
+      const notifyWrapper=(message)=> {
+        notify(message);
+        };
+      
+          </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="/dist/bundle.js"></script>
+    
+    <button id="goBackButton" onclick="window.history.back()">
+      <i class="fa-solid fa-arrow-left"></i>&nbsp;Go Back
+    </button>
+    <div class="container">
+      <h1>Edit Resource Types</h1>
+      <form id="edit-resource-types-form">
+        <table>
+          <thead>
+            <tr>
+              <th>Resource Type ID</th>
+              <th>Resource Type Name</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="resource-types-table-body">
+            <!-- Resource types will be dynamically inserted here -->
+          </tbody>
+        </table>
+        <button type="button" id="add-resource-type-button">
+          Add New Resource Type
+        </button>
+        <button type="submit">Save Changes</button>
+      </form>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const response = await fetch("/admin/get-resource-types");
+        const resourceTypes = await response.json();
+        const tableBody = document.getElementById("resource-types-table-body");
+
+        let maxId = Math.max(
+          ...resourceTypes.map((rt) => rt.Resource_Type_ID),
+          0
+        );
+
+        resourceTypes.forEach((resourceType) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+                    <td>${resourceType.Resource_Type_ID}</td>
+                    <td><input type="text" name="resourceTypeName" value="${resourceType.Resource_Type_Name}" /></td>
+                    <td><button type="button" class="delete-button">Delete</button></td>
+                `;
+          tableBody.appendChild(row);
+        });
+
+        document
+          .getElementById("add-resource-type-button")
+          .addEventListener("click", () => {
+            maxId += 1;
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                    <td>${0}</td>
+                    <td><input type="text" name="resourceTypeName" value="" /></td>
+                    <td><button type="button" class="delete-button">Delete</button></td>
+                `;
+            tableBody.appendChild(row);
+          });
+
+        tableBody.addEventListener("click", async (event) => {
+          if (event.target.classList.contains("delete-button")) {
+            const row = event.target.closest("tr");
+            const resourceTypeId = row.children[0].textContent;
+
+            if (
+              confirm("Are you sure you want to delete this resource type?")
+            ) {
+              const response = await fetch(
+                `/admin/delete-resource-type/${resourceTypeId}`,
+                {
+                  method: "DELETE",
+                }
+              );
+
+              if (response.ok) {
+                row.remove();
+                notifyWrapper("Deleted successfully");
+              } else {
+                const errorMessage = await response.text();
+                notifyWrapper(errorMessage);
+              }
+            }
+          }
+        });
+
+        document
+          .getElementById("edit-resource-types-form")
+          .addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const resourceTypes = Array.from(
+              tableBody.querySelectorAll("tr")
+            ).map((row) => ({
+              id: parseInt(row.children[0].textContent, 10),
+              name: row.children[1].querySelector("input").value,
+            }));
+
+            const response = await fetch("/admin/edit-resource-types", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ resourceTypes }),
+            });
+
+            if (response.ok) {
+              notifyWrapper("Changes saved successfully");
+            } else {
+              notifyWrapper("Error saving changes");
+            }
+          });
+      });
+    </script>
+
+    <style>
+      .bg-img {
+        position: fixed;
+        display: flex;
+        top: 0;
+        left: 0;
+        opacity: 0.2;
+        width: 110vw;
+        height: 100vh;
+        z-index: -1;
+      }
+    </style>
+    <img src="media/calender-bg.png" class="bg-img" />
+
+    <script src="scripts/allowUI.js"></script>
+    <section id="UI-BLOCKER">
+      <h1>
+        PLEASE ENABLE JAVASCRIPT ON YOUR BROWSER TO USE SCHEDULER ASSISTANT.
+        ACCESS HAS BEEN BLOCKED UNTIL JAVASCRIPT IS ENABLED ON YOUR BROWSER.
+      </h1>
+      <br />
+      <p
+        style="
+          background-color: rgb(0, 0, 0);
+          padding: 10px;
+          border-radius: 10px;
+          width: 150px;
+        "
+      >
+        <a
+          style="
+            text-shadow: none;
+            color: rgb(204, 213, 255);
+            background: none;
+            border: none;
+          "
+          href="https://www.enable-javascript.com/"
+          >Learn how.</a
+        >
+      </p>
+      <img src="media/jslogo.png" class="bg-img" />
+    </section>
+  </body>
+</html>

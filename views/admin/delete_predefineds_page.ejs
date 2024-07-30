@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+ 
+<html lang="en">
+  <head><script src="scripts/global_ui.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delete Predefined Limits and Usages</title>
+    <link rel="stylesheet" href="/style/deletepredefined.css" />    <script>
+      const notifyWrapper=(message)=> {
+        notify(message);
+        };
+      
+          </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="/dist/bundle.js"></script>
+    
+    <button id="goBackButton" onclick="window.history.back()">Go Back</button>
+    <div class="container">
+      <h1>Delete Predefined Limits and Usages</h1>
+
+      <h2>Predefined Limits</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="predefined-limits-table-body">
+          <!-- Predefined limits will be dynamically inserted here -->
+        </tbody>
+      </table>
+
+      <h2>Predefined Usages</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Resource Type ID</th>
+            <th>Resource Used</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="predefined-usages-table-body">
+          <!-- Predefined usages will be dynamically inserted here -->
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const limitsResponse = await fetch("/admin/get-predefined-limits");
+        const predefinedLimits = await limitsResponse.json();
+        const limitsTableBody = document.getElementById(
+          "predefined-limits-table-body"
+        );
+
+        predefinedLimits.forEach((limit) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+          <td>${limit.Predefined_Hourly_Limit_ID}</td>
+          <td>${limit.Predefined_Hourly_Limit_Name}</td>
+          <td><button type="button" class="delete-button" data-id="${limit.Predefined_Hourly_Limit_ID}">Delete</button></td>
+        `;
+          limitsTableBody.appendChild(row);
+        });
+
+        const usagesResponse = await fetch("/admin/get-predefined-usages");
+        const predefinedUsages = await usagesResponse.json();
+        const usagesTableBody = document.getElementById(
+          "predefined-usages-table-body"
+        );
+
+        predefinedUsages.forEach((usage) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+          <td>${usage.Predefined_Usage_ID}</td>
+          <td>${usage.Resource_Type_ID}</td>
+          <td>${usage.Resource_Used}</td>
+          <td><button type="button" class="delete-button" data-id="${usage.Predefined_Usage_ID}">Delete</button></td>
+        `;
+          usagesTableBody.appendChild(row);
+        });
+
+        document.addEventListener("click", async (event) => {
+          if (event.target.classList.contains("delete-button")) {
+            const id = event.target.getAttribute("data-id");
+            const type = event.target.closest("tbody").id.includes("limits")
+              ? "limit"
+              : "usage";
+            const response = await fetch(
+              `/admin/delete-predefined-${type}/${id}`,
+              { method: "DELETE" }
+            );
+
+            if (response.ok) {
+              event.target.closest("tr").remove();
+            } else {
+              notifyWrapper("Error deleting predefined " + type);
+            }
+          }
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", (event) => {
+        const tableBody = document.getElementById(
+          "predefined-usages-table-body"
+        );
+        const rows = tableBody.getElementsByTagName("tr");
+        const uniqueResourceTypeIds = new Set();
+
+        for (let row of rows) {
+          const cells = row.getElementsByTagName("td");
+          const resourceTypeId = cells[1].innerText;
+
+          if (!uniqueResourceTypeIds.has(resourceTypeId)) {
+            uniqueResourceTypeIds.add(resourceTypeId);
+            const deleteButton = row.querySelector(".delete-button");
+            if (deleteButton) {
+              deleteButton.remove();
+            }
+          }
+        }
+      });
+    </script>
+
+    <style>
+      .bg-img {
+        position: fixed;
+        display: flex;
+        top: 0;
+        left: 0;
+        opacity: 0.2;
+        width: 110vw;
+        height: 100vh;
+        z-index: -1;
+      }
+    </style>
+    <img src="media/calender-bg.png" class="bg-img" />
+    <script src="scripts/allowUI.js"></script>
+    <section id="UI-BLOCKER">
+      <h1>
+        PLEASE ENABLE JAVASCRIPT ON YOUR BROWSER TO USE SCHEDULER ASSISTANT.
+        ACCESS HAS BEEN BLOCKED UNTIL JAVASCRIPT IS ENABLED ON YOUR BROWSER.
+      </h1>
+      <br />
+      <p
+        style="
+          background-color: rgb(0, 0, 0);
+          padding: 10px;
+          border-radius: 10px;
+          width: 150px;
+        "
+      >
+        <a
+          style="
+            text-shadow: none;
+            color: rgb(204, 213, 255);
+            background: none;
+            border: none;
+          "
+          href="https://www.enable-javascript.com/"
+          >Learn how.</a
+        >
+      </p>
+      <img src="media/jslogo.png" class="bg-img" />
+    </section>
+  </body>
+</html>

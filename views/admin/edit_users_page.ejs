@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+ 
+
+<html lang="en">
+  <head><script src="scripts/global_ui.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Users</title>
+    <script>
+      const notifyWrapper = (message) => {
+        notify(message);
+      };
+
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("/admin/get-users", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const usersTableBody = document.querySelector("#usersTable tbody");
+            usersTableBody.innerHTML = "";
+
+            data.forEach((user) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                <td>${user.User_ID}</td>
+                <td>${user.Username}</td>
+                <td>${user.Access_Type_ID}</td>
+                <td>
+                  <button onclick="deleteUser(${user.User_ID})">Delete</button>
+                  <button onclick="changeUsername(${user.User_ID})">Change Username</button>
+                  <button onclick="changeUserRole(${user.User_ID})">Change Role</button>
+                  <button onclick="changePassword(${user.User_ID})">Change Password</button>
+                  <button onclick="modifyTests(${user.User_ID})">List of Tests Allowed to Modify</button>
+                </td>
+              `;
+              usersTableBody.appendChild(row);
+            });
+          })
+          .catch((error) => console.error("Error:", error));
+      });
+
+      function deleteUser(userId) {
+        if (confirm("Are you sure you want to delete this user?")) {
+          fetch(`/admin/delete-user/${userId}`, {
+            method: "DELETE",
+          })
+            .then((response) => response.text())
+            .then((message) => {
+              notifyWrapper("User deleted successfully");
+              window.location.reload(); // Reload users
+            })
+            .catch((error) => console.error("Error:", error));
+        }
+      }
+
+      function changeUsername(userId) {
+        const newUsername = prompt("Enter new username:");
+        if (newUsername) {
+          fetch("/admin/change-username", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId, newUsername }),
+          })
+            .then((response) => response.text())
+            .then((message) => {
+              notifyWrapper("Username updated successfully");
+              window.location.reload(); // Reload users
+            })
+            .catch((error) => console.error("Error:", error));
+        }
+      }
+
+      function changeUserRole(userId) {
+        const newRoleId = prompt("Enter new role ID:");
+        if (newRoleId) {
+          fetch("/admin/change-user-role", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId, newRoleId }),
+          })
+            .then((response) => response.text())
+            .then((message) => {
+              notifyWrapper("User role updated successfully");
+              window.location.reload(); // Reload users
+            })
+            .catch((error) => console.error("Error:", error));
+        }
+      }
+
+      function changePassword(userId) {
+        const newPassword = prompt("Enter new password:");
+        if (newPassword) {
+          fetch("/admin/change-password", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId, newPassword }),
+          })
+            .then((response) => response.text())
+            .then((message) => {
+              notifyWrapper("Password updated successfully");
+            })
+            .catch((error) => console.error("Error:", error));
+        }
+      }
+
+      function modifyTests(userId) {
+        const testList = prompt("Enter a list of test numbers (comma separated):");
+        if (testList) {
+          fetch("/admin/change-user-tests-list", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId, testList }),
+          })
+            .then((response) => response.text())
+            .then((message) => {
+              notifyWrapper("Test list updated successfully");
+            })
+            .catch((error) => console.error("Error:", error));
+        }
+      }
+    </script>
+    <style>
+ body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f4f8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        width: 80%;
+        margin: 20px auto;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2.5em;
+        margin-bottom: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin: 20px 0;
+      }
+
+      th,
+      td {
+        padding: 15px;
+        border-bottom: 1px solid #dcdfe3;
+        text-align: left;
+        vertical-align: middle;
+      }
+
+      th {
+        background-color: #34495e;
+        color: #ecf0f1;
+        font-weight: bold;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      td {
+        background-color: #ffffff;
+        color: #34495e;
+      }
+
+      button {
+        padding: 10px 15px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-size: 0.9em;
+        margin-right: 5px;
+      }
+
+      button:hover {
+        background-color: #2980b9;
+      }
+
+      #loadUsersBtn {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        padding: 15px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        margin: 20px;
+        transition: background-color 0.3s ease;
+      }
+
+      #loadUsersBtn:hover {
+        background-color: #1a252f;
+      }
+
+      /* Modal for user actions */
+      #box {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        width: 500px;
+        height: 500px;
+        background-color: #34495e;
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+      }
+
+      #box button {
+        background-color: #e74c3c;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        float: right;
+        margin-top: -10px;
+        margin-right: -10px;
+      }
+
+      #box button:hover {
+        background-color: #c0392b;
+      }
+
+      #box div {
+        margin-top: 10px;
+        padding: 10px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+      }
+
+      #box div:nth-child(even) {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .bg-img {
+        position: fixed;
+        display: flex;
+        top: 0;
+        left: 0;
+        opacity: 0.2;
+        width: 110vw;
+        height: 100vh;
+        z-index: -1;
+      }
+
+      #goBackButton {
+        top: 0;
+        margin-top: 0;
+        position: absolute;
+        left: 0;
+      }
+
+      #UI-BLOCKER {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 99999999999999999999999999999;
+        background-color: #0000aa;
+        box-shadow: 0 0 5px var(--shadow-color);
+        padding: 20px;
+        margin-top: 0px;
+        cursor: not-allowed;
+        user-select: none;
+        /* Prevent text selection */
+      }
+
+      #UI-BLOCKER h1 {
+        text-align: center;
+        display: block;
+        margin: auto;
+        margin-top: 30vh;
+        color: white;
+        width: 80%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script src="/dist/bundle.js"></script>
+
+    <button id="goBackButton" onclick="window.history.back()">
+      <i class="fa-solid fa-arrow-left"></i>&nbsp;Go Back
+    </button>
+    <div class="container">
+      <h1>Edit Users</h1>
+      <table id="usersTable">
+        <thead>
+          <tr>
+            <th>User ID</th>
+            <th>Username</th>
+            <th>Role ID</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <script src="scripts/allowUI.js"></script>
+    <section id="UI-BLOCKER">
+      <h1>
+        PLEASE ENABLE JAVASCRIPT ON YOUR BROWSER TO USE SCHEDULER ASSISTANT.
+        ACCESS HAS BEEN BLOCKED UNTIL JAVASCRIPT IS ENABLED ON YOUR BROWSER.
+      </h1>
+      <br />
+      <p
+        style="
+          background-color: rgb(0, 0, 0);
+          padding: 10px;
+          border-radius: 10px;
+          width: 150px;
+        "
+      >
+        <a
+          style="
+            text-shadow: none;
+            color: rgb(204, 213, 255);
+            background: none;
+            border: none;
+          "
+          href="https://www.enable-javascript.com/"
+          >Learn how.</a
+        >
+      </p>
+      <img src="media/jslogo.png" class="bg-img" />
+    </section>
+  </body>
+</html>

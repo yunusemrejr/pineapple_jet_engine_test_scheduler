@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+ 
+
+<html>
+  <head><script src="scripts/global_ui.js"></script>
+    <title>Login Screen</title>
+    <link rel="stylesheet" href="style/login.css" />
+    <link href="/fontawesome-6.4.2/css/fontawesome.css" rel="stylesheet" />
+    <link href="/fontawesome-6.4.2/css/brands.css" rel="stylesheet" />
+    <link href="/fontawesome-6.4.2/css/solid.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="media/favicon.ico" />
+    <style>
+      /*
+
+ 
+
+      body,
+      h1,
+      form,
+      label,
+      input,
+      button {
+        margin: 0;
+        padding: 0;
+      }
+
+      @keyframes gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(-45deg, #164863, #427d9d, #9bbec8, #ddf2fd);
+        background-size: 400% 400%;
+
+        animation: gradient 15s ease infinite;
+      }
+
+      h1 {
+        margin: 20px 0;
+        font-size: 24px;
+        color: #ffffff;
+      }
+      #exitButton {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+      }
+
+      .notification_err {
+        background-color: rgb(218, 0, 0);
+        color: white;
+        text-align: center;
+        padding: 5px;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 999999999;
+        pointer-events: none;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .notification {
+        background-color: rgb(31, 88, 145);
+        color: white;
+        text-align: center;
+        padding: 15px;
+        position: fixed;
+        top: 10px;
+        width: 100%;
+        z-index: 999999999;
+        pointer-events: none;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .notification {
+        opacity: 0;
+        transform: translateY(-20px);
+        animation: slideIn 0.5s ease-in-out forwards;
+      }
+
+      @keyframes slideIn {
+        0% {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideOut {
+        0% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        100% {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+      }
+
+      .exitAnimate {
+        animation: slideOut 0.5s ease-in-out forwards;
+      }
+
+      .hide {
+        display: none;
+      }
+      #exitButton:hover {
+        background-color: #d32f2f;
+      }
+
+      form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        width: 300px;
+        margin: 0 auto;
+        padding: 40px;
+        padding-right: 60px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      button[type="submit"] {
+        background: linear-gradient(-45deg, #164863, #427d9d, #577f89, #83a5b8);
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+      }
+      button[type="submit"]:hover {
+        background: linear-gradient(
+          -435deg,
+          #246b92,
+          #307fa9,
+          #83b4c1,
+          #92bed8
+        );
+      }
+
+      button[type="submit"]:hover {
+        background-color: #0056b3;
+      }
+      .logo {
+        display: block;
+        margin: auto;
+        float: right;
+        margin: 10px;
+        width: 100px;
+        filter: drop-shadow(5px 5px 7px rgba(255, 254, 254, 0.5));
+      }
+
+      #asp {
+        height: 45px;
+      }
+
+      #login-title {
+        text-align: center;
+        font-size: 40px;
+        text-shadow: 1px 1px 1px #919191, 1px 2px 1px #4b7585,
+          1px 3px 1px #9191919a, 1px 4px 1px #91919162, 1px 5px 1px #91919139,
+          1px 6px 1px #91919132, 1px 7px 1px #2e6e890f, 1px 8px 1px #637a9014,
+          1px 9px 1px #67788c06, 1px 10px 1px #53608f10,
+          1px 18px 6px rgba(12, 83, 141, 0.4),
+          1px 22px 10px rgba(16, 16, 16, 0.2),
+          1px 25px 35px rgba(16, 16, 16, 0.2),
+          1px 30px 60px rgba(16, 16, 16, 0.4);
+      }
+
+      .error {
+        color: rgb(161, 0, 0);
+        font-size: 25px;
+        text-align: center;
+      }
+
+      #gear {
+        display: flex;
+        position: fixed;
+        width: 500px;
+        bottom: 0;
+        left: 0;
+        z-index: -999;
+        opacity: 0.5;
+      }
+
+      #UI-BLOCKER {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 99999999999999999999999999999;
+        background-color: #0000aa;
+        box-shadow: 0 0 5px var(--shadow-color);
+        padding: 20px;
+        margin-top: 0px;
+        cursor: not-allowed;
+        user-select: none; /* Prevent text selection */
+      }
+
+      #UI-BLOCKER h1 {
+        text-align: center;
+        display: block;
+        margin: auto;
+        margin-top: 30vh;
+        color: white;
+        width: 80%;
+      }
+
+      #UI-BLOCKER img {
+        display: block;
+        margin: auto;
+        margin-top: 10vh;
+        width: 300px;
+        opacity: 0.5;
+      }
+    </style>
+  </head>
+  <body>
+    <img class="logo" src="media/pineapple_Logo.png" />
+    <img class="logo" id="asp" src="media/asp.png" />
+    <br /><br /><br /><br /><br /><br />
+    <br />
+    <h1 id="login-title">Flying Pineapple Motor Test Scheduler Login</h1>
+    <br /><br />
+
+    <% if (typeof message !== 'undefined') { %>
+    <p class="error"><%= message %></p>
+    <% } %>
+
+    <form method="post" action="/auth/login">
+      <label for="username"
+        ><i class="fa-solid fa-user"></i>&nbsp;Username:</label
+      >
+      <input type="text" id="username" name="username" required />
+      <br />
+      <label for="password"
+        ><i class="fa-solid fa-key"></i>&nbsp;Password:</label
+      >
+      <input type="password" id="password" name="password" required />
+      <br />
+      <button type="submit">
+        <i class="fa-solid fa-right-to-bracket"></i>&nbsp;Login
+      </button>
+    </form>
+
+    <script>
+      ////EXIT BUTTON
+      document.addEventListener("DOMContentLoaded", () => {
+        const exitButton = document.getElementById("exitButton");
+
+        exitButton.addEventListener("click", () => {
+          fetch("/exit", {
+            method: "POST",
+          }).then((response) => {
+            if (response.status === 200) {
+              setTimeout(() => {
+                window.location.href = window.location.href;
+              }, 2000);
+              // alert('Backend exit process initiated successfully.');
+            } else {
+              alert("Failed to initiate backend exit process.");
+            }
+          });
+        });
+      });
+    </script>
+
+    <img src="media/gear.png" id="gear" class="gear" />
+
+    <script src="scripts/loader.js"></script>
+    <script src="scripts/allowUI.js"></script>
+    <script src="../scripts/allowUI.js"></script>
+
+    <section id="UI-BLOCKER">
+      <h1>
+        PLEASE ENABLE JAVASCRIPT ON YOUR BROWSER TO USE SCHEDULER ASSISTANT.
+        ACCESS HAS BEEN BLOCKED UNTIL JAVASCRIPT IS ENABLED ON YOUR BROWSER.
+      </h1>
+      <br />
+      <p
+        style="
+          background-color: rgb(0, 0, 0);
+          padding: 10px;
+          border-radius: 10px;
+          width: 150px;
+        "
+      >
+        <a
+          style="
+            text-shadow: none;
+            color: rgb(204, 213, 255);
+            background: none;
+            border: none;
+          "
+          href="https://www.enable-javascript.com/"
+          >Learn how.</a
+        >
+      </p>
+      <img src="media/jslogo.png" class="bg-img" />
+    </section>
+
+    
+  
+
+ 
+  </body>
+</html>
+ 

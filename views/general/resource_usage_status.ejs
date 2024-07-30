@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+ 
+
+<html lang="en">
+  <head>  <script src="scripts/global_ui.js"></script>  <script>
+    const notifyWrapper=(message)=> {
+      notify(message);
+      };
+    
+        </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/style/resource_usage_status.css" />
+    <title>Resource Usage</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="/dist/bundle.js"></script>
+    
+    <h1>Resource Usages</h1>
+    <table id="resource-usage-table" border="1">
+      <thead>
+        <tr>
+          <th>Status ID</th>
+          <th>Test Type ID</th>
+          <th>Date</th>
+          <th>Hour</th>
+          <th>User ID</th>
+          <th>Resource Type</th>
+          <th>Resource Limit</th>
+          <th>Resource Used</th>
+          <th>Resource Left</th>
+          <th>Exceeds Limit</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script src="/scripts/resource_usage_status.js"></script>
+    <script>
+      // Example usage
+      const date = '2024-07-18'; // Replace with the desired date
+      const hour = 16; // Replace with the desired hour
+      displayResourceUsage(date, hour);
+    </script>
+  </body>
+</html>

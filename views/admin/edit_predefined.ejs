@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+ 
+<html lang="en">
+  <head><script src="scripts/global_ui.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Predefined Resource Limits and Usages</title>
+    <link rel="stylesheet" href="/style/predefined.css" />
+    <!-- Update with your actual stylesheet path -->
+    <script src="/jquery/jquery-3.6.0.min.js"></script>    <script>
+      const notifyWrapper=(message)=> {
+        notify(message);
+        };
+      
+          </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="/dist/bundle.js"></script>
+    
+    <button id="goBackButton" onclick="window.history.back()">
+      <i class="fa-solid fa-arrow-left"></i>&nbsp;Go Back
+    </button>
+    <h1>Manage Predefined Hourly Limits</h1>
+
+    <h2>Add or Edit Predefined Hourly Limit</h2>
+    <form id="predefined-limit-form">
+      <input type="hidden" id="predefined-limit-id" />
+      <label for="predefined-limit-name">Name:</label>
+      <input type="text" id="predefined-limit-name" required />
+      <label for="trigger-hours-list">Trigger Hours (comma-separated):</label>
+      <input type="text" id="trigger-hours-list" required />
+      <h3>Resources</h3>
+      <div id="resources-container"></div>
+      <button type="button" onclick="addResource()">Add Resource</button>
+      <button type="submit">Save</button>
+    </form>
+
+    <h2>Existing Predefined Hourly Limits</h2>
+    <table id="predefined-limits-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Trigger Hours</th>
+          <th>Resources</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Predefined hourly limits will be dynamically populated here -->
+      </tbody>
+    </table>
+
+    <h2>Edit Predefined Resource Limits and Usages</h2>
+    <form id="edit-predefined-form">
+      <label for="resourceTypeId">Resource Type:</label>
+      <select id="resourceTypeId" name="resourceTypeId" required>
+        <option value="">Select Resource Type</option>
+      </select>
+
+      <div id="resource-limits-container"></div>
+
+      <label
+        for="predefinedUsageId"
+        id="predefinedUsageLabel"
+        style="display: none"
+        >Predefined Usage:</label
+      >
+      <select
+        id="predefinedUsageId"
+        name="predefinedUsageId"
+        style="display: none"
+      >
+        <option value="">Select Predefined Usage</option>
+        <option value="new">New Predefined Usage</option>
+      </select>
+      <input
+        type="number"
+        step="0.01"
+        id="newPredefinedUsage"
+        name="newPredefinedUsage"
+        placeholder="Enter new predefined usage"
+        style="display: none"
+      />
+
+      <label for="resourceUsed">Resource Used:</label>
+      <input
+        type="number"
+        step="0.01"
+        id="resourceUsed"
+        name="resourceUsed"
+        required
+      />
+
+      <button type="submit">Update</button>
+    </form>
+
+    <a href="delete-predefineds-page" style="background-color: rgb(149, 69, 16)"
+      >Action page for Delete a Predefined</a
+    >
+    <script>
+      let predefinedLimits = [];
+      let resourceTypes = [];
+      let predefinedUsages = [];
+
+      function fetchPredefinedData() {
+        $.get("/admin/predefined-data", function (data) {
+          predefinedLimits = data.predefinedLimits;
+          resourceTypes = data.resourceTypes;
+          predefinedUsages = data.predefinedUsages;
+
+          populatePredefinedLimitsTable(predefinedLimits, resourceTypes);
+          populateDropdown(
+            "resourceTypeId",
+            resourceTypes,
+            "Resource_Type_ID",
+            "Resource_Type_Name"
+          );
+        });
+      }
+
+      function populatePredefinedLimitsTable(limits, resourceTypes) {
+        const tbody = $("#predefined-limits-table tbody");
+        tbody.empty();
+        limits.forEach((limit) => {
+          const resources = limit.resources
+            .map(
+              (r) =>
+                `ID: ${r.resourceId}, Name: ${getResourceNameById(
+                  resourceTypes,
+                  r.resourceId
+                )}, Limit: ${r.limitValue}`
+            )
+            .join("<br>");
+          tbody.append(`
+                    <tr>
+                        <td>${limit.predefinedHourlyLimitID}</td>
+                        <td>${limit.predefinedHourlyLimitName}</td>
+                        <td>${limit.triggerHoursList.join(", ")}</td>
+                        <td>${resources}</td>
+                        <td>
+                            <button onclick="editPredefinedLimit(${
+                              limit.predefinedHourlyLimitID
+                            })">Edit</button>
+                            <button onclick="deletePredefinedLimit(${
+                              limit.predefinedHourlyLimitID
+                            })">Delete</button>
+                        </td>
+                    </tr>
+                `);
+        });
+      }
+
+      function getResourceNameById(resourceTypes, resourceId) {
+        const resource = resourceTypes.find(
+          (rt) => rt.Resource_Type_ID === resourceId
+        );
+        return resource ? resource.Resource_Type_Name : "Unknown";
+      }
+
+      function addResource() {
+        $("#resources-container").append(`
+                <div>
+                    <label>Resource ID:</label>
+                    <input type="number" class="resource-id" required>
+                    <label>Limit:</label>
+                    <input type="number" class="resource-limit" required>
+                    <button type="button" onclick="removeResource(this)">Remove</button>
+                </div>
+            `);
+      }
+
+      function removeResource(button) {
+        $(button).parent().remove();
+      }
+
+      function editPredefinedLimit(id) {
+        const limit = predefinedLimits.find(
+          (pl) => pl.predefinedHourlyLimitID === id
+        );
+        $("#predefined-limit-id").val(limit.predefinedHourlyLimitID);
+        $("#predefined-limit-name").val(limit.predefinedHourlyLimitName);
+        $("#trigger-hours-list").val(limit.triggerHoursList.join(", "));
+
+        const resourcesContainer = $("#resources-container");
+        resourcesContainer.empty();
+        limit.resources.forEach((resource) => {
+          resourcesContainer.append(`
+                    <div>
+                        <label>Resource ID:</label>
+                        <input type="number" class="resource-id" value="${resource.resourceId}" required>
+                        <label>Limit:</label>
+                        <input type="number" class="resource-limit" value="${resource.limitValue}" required>
+                        <button type="button" onclick="removeResource(this)">Remove</button>
+                    </div>
+                `);
+        });
+
+        $("#predefined-limit-form").show();
+      }
+
+      function savePredefinedLimit() {
+        const id = $("#predefined-limit-id").val();
+        const predefinedHourlyLimitName = $("#predefined-limit-name").val();
+        const triggerHoursList = $("#trigger-hours-list")
+          .val()
+          .split(",")
+          .map(Number);
+        const resources = [];
+        $("#resources-container > div").each(function () {
+          const resourceId = $(this).find(".resource-id").val();
+          const limitValue = $(this).find(".resource-limit").val();
+          resources.push({ resourceId, limitValue });
+        });
+
+        const data = {
+          predefinedHourlyLimitName,
+          triggerHoursList,
+          resources,
+        };
+
+        if (id) {
+          data.predefinedLimitId = id;
+          $.post("/admin/edit-predefined-hourly-limit", data, function () {
+            fetchPredefinedData();
+            closeModal();
+          });
+        } else {
+          $.post("/admin/create-predefined-hourly-limit", data, function () {
+            fetchPredefinedData();
+            closeModal();
+          });
+        }
+      }
+
+      function deletePredefinedLimit(id) {
+        if (
+          confirm(
+            "Are you sure you want to delete this predefined hourly limit?"
+          )
+        ) {
+          $.ajax({
+            url: `/admin/delete-predefined-hourly-limit/${id}`,
+            type: "DELETE",
+            success: function () {
+              fetchPredefinedData();
+            },
+          });
+        }
+      }
+
+      function closeModal() {
+        $("#predefined-limit-form")[0].reset();
+        $("#resources-container").empty();
+        $("#predefined-limit-id").val("");
+        $("#predefined-limit-form").show();
+      }
+
+      function populateDropdown(dropdownId, data, valueField, textField) {
+        const dropdown = $(`#${dropdownId}`);
+        dropdown.empty();
+        dropdown.append('<option value="">Select an option</option>');
+        data.forEach((item) => {
+          const option = $("<option></option>")
+            .attr("value", item[valueField])
+            .text(item[textField]);
+          dropdown.append(option);
+        });
+      }
+
+      function fetchResourceLimits(resourceId) {
+        const resourceLimits = predefinedLimits.filter((limit) =>
+          limit.resources.some((r) => r.resourceId === parseInt(resourceId))
+        );
+
+        const resourceLimitsContainer = $("#resource-limits-container");
+        resourceLimitsContainer.empty();
+
+        if (resourceLimits.length) {
+          resourceLimits.forEach((limit) => {
+            const resource = limit.resources.find(
+              (r) => r.resourceId === parseInt(resourceId)
+            );
+            resourceLimitsContainer.append(`
+                        <div>
+                            <label>Limit for ${limit.predefinedHourlyLimitName}:</label>
+                            <input type="number" step="0.01" class="resource-limit" value="${resource.limitValue}" required>
+                        </div>
+                    `);
+          });
+        } else {
+          resourceLimitsContainer.append(
+            "<p>No limits found for the selected resource.</p>"
+          );
+        }
+      }
+
+      function filterPredefinedUsages(resourceTypeId) {
+        const filteredUsages = predefinedUsages.filter(
+          (usage) => usage.Resource_Type_ID === parseInt(resourceTypeId)
+        );
+        const usageDropdown = $("#predefinedUsageId");
+        const usageLabel = $("#predefinedUsageLabel");
+        const newUsageInput = $("#newPredefinedUsage");
+
+        if (filteredUsages.length > 0) {
+          populateDropdown(
+            "predefinedUsageId",
+            filteredUsages,
+            "Predefined_Usage_ID",
+            "Resource_Used"
+          );
+          usageDropdown.append(
+            '<option value="new">New Predefined Usage</option>'
+          );
+          usageLabel.show();
+          usageDropdown.show().prop("required", true);
+          newUsageInput.hide();
+        } else {
+          usageLabel.hide();
+          usageDropdown.hide().prop("required", false).val("");
+          newUsageInput.show();
+        }
+      }
+
+      $(document).ready(function () {
+        fetchPredefinedData();
+        $("#predefined-limit-form").submit(function (e) {
+          e.preventDefault();
+          savePredefinedLimit();
+        });
+        closeModal(); // Initially hide the form
+
+        $("#predefinedUsageId").change(function () {
+          const newUsageInput = $("#newPredefinedUsage");
+          const resourceUsedInput = $("#resourceUsed");
+
+          if ($(this).val() === "new") {
+            newUsageInput.show();
+            resourceUsedInput
+              .val("")
+              .attr("placeholder", "Enter new predefined usage");
+          } else {
+            newUsageInput.hide();
+            const selectedUsage = predefinedUsages.find(
+              (usage) => usage.Predefined_Usage_ID === parseInt($(this).val())
+            );
+            if (selectedUsage) {
+              resourceUsedInput.val(selectedUsage.Resource_Used);
+            } else {
+              resourceUsedInput.val("");
+            }
+            resourceUsedInput.attr("placeholder", "Resource Used");
+          }
+        });
+
+        $("#resourceTypeId").change(function () {
+          fetchResourceLimits($(this).val());
+          filterPredefinedUsages($(this).val());
+        });
+
+        $(document).ready(function () {
+          fetchPredefinedData();
+          $("#predefined-limit-form").submit(function (e) {
+            e.preventDefault();
+            savePredefinedLimit();
+          });
+          closeModal(); // Initially hide the form
+
+          $("#edit-predefined-form").submit(function (e) {
+            e.preventDefault();
+            const predefinedLimitId = $("#predefinedLimitId").val();
+            const resourceTypeId = $("#resourceTypeId").val();
+            let predefinedUsageId = $("#predefinedUsageId").val();
+            const resourceUsed = $("#resourceUsed").val();
+
+            if (predefinedUsageId === "new") {
+              predefinedUsageId = null;
+              const newPredefinedUsage = $("#newPredefinedUsage").val();
+              if (!newPredefinedUsage) {
+                notifyWrapper("Please enter the new predefined usage value.");
+                return;
+              }
+            }
+
+            const data = {
+              predefinedLimitId,
+              resourceTypeId,
+              predefinedUsageId,
+              newPredefinedUsage:
+                predefinedUsageId === null
+                  ? $("#newPredefinedUsage").val()
+                  : undefined,
+              resourceUsed,
+            };
+
+            $.post("/admin/edit-predefined", data, function () {
+              $("#message")
+                .text(
+                  "Predefined resource limits and usages updated successfully"
+                )
+                .show()
+                .delay(3000)
+                .fadeOut();
+            }).fail(function () {
+              $("#message")
+                .text("Error updating predefined resource limits and usages")
+                .show()
+                .delay(3000)
+                .fadeOut();
+            });
+          });
+        });
+      });
+    </script>
+
+    <style>
+      .bg-img {
+        position: fixed;
+        display: flex;
+        top: 0;
+        left: 0;
+        opacity: 0.2;
+        width: 110vw;
+        height: 100vh;
+        z-index: -1;
+      }
+    </style>
+    <img src="media/calender-bg.png" class="bg-img" />
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        setInterval(function () {
+          document.querySelectorAll("button").forEach((button) => {
+            if (button.innerText.match("Remove|Delete")) {
+              button.classList.add("remove");
+            }
+          });
+        }, 1000);
+      });
+    </script>
+
+    <script src="scripts/allowUI.js"></script>
+    <section id="UI-BLOCKER">
+      <h1>
+        PLEASE ENABLE JAVASCRIPT ON YOUR BROWSER TO USE SCHEDULER ASSISTANT.
+        ACCESS HAS BEEN BLOCKED UNTIL JAVASCRIPT IS ENABLED ON YOUR BROWSER.
+      </h1>
+      <br />
+      <p
+        style="
+          background-color: rgb(0, 0, 0);
+          padding: 10px;
+          border-radius: 10px;
+          width: 150px;
+        "
+      >
+        <a
+          style="
+            text-shadow: none;
+            color: rgb(204, 213, 255);
+            background: none;
+            border: none;
+          "
+          href="https://www.enable-javascript.com/"
+          >Learn how.</a
+        >
+      </p>
+      <img src="media/jslogo.png" class="bg-img" />
+    </section>
+  </body>
+</html>
