@@ -1,0 +1,361 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Access_Type_Permissions](
+	[Access_Type_ID] [int] NOT NULL,
+	[Permission_ID] [int] NOT NULL,
+	[Allowed] [bit] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Access_Type_Permissions] ADD PRIMARY KEY CLUSTERED 
+(
+	[Access_Type_ID] ASC,
+	[Permission_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Access_Type_Permissions]  WITH CHECK ADD FOREIGN KEY([Access_Type_ID])
+REFERENCES [dbo].[Access_Types] ([Access_Type_ID])
+GO
+ALTER TABLE [dbo].[Access_Type_Permissions]  WITH CHECK ADD FOREIGN KEY([Access_Type_ID])
+REFERENCES [dbo].[Access_Types] ([Access_Type_ID])
+GO
+ALTER TABLE [dbo].[Access_Type_Permissions]  WITH CHECK ADD FOREIGN KEY([Permission_ID])
+REFERENCES [dbo].[Permissions] ([Permission_ID])
+GO
+ALTER TABLE [dbo].[Access_Type_Permissions]  WITH CHECK ADD FOREIGN KEY([Permission_ID])
+REFERENCES [dbo].[Permissions] ([Permission_ID])
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Access_Types](
+	[Access_Type_ID] [int] NOT NULL,
+	[Access_Type_Name] [nvarchar](250) NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Access_Types] ADD PRIMARY KEY CLUSTERED 
+(
+	[Access_Type_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Current_Test_Status](
+	[Current_Hour] [int] NOT NULL,
+	[Scheduler_Running] [bit] NOT NULL,
+	[Test_1_Runnable] [bit] NOT NULL,
+	[Test_2_Runnable] [bit] NOT NULL,
+	[Test_3_Runnable] [bit] NOT NULL
+) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Hourly_Test_Status](
+	[Status_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Test_Type_ID] [int] NOT NULL,
+	[Date] [date] NOT NULL,
+	[Hour] [int] NOT NULL,
+	[User_ID] [int] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Hourly_Test_Status] ADD PRIMARY KEY CLUSTERED 
+(
+	[Status_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Hourly_Test_Status]  WITH CHECK ADD FOREIGN KEY([Test_Type_ID])
+REFERENCES [dbo].[Test_Types] ([Test_Type_ID])
+GO
+ALTER TABLE [dbo].[Hourly_Test_Status]  WITH CHECK ADD FOREIGN KEY([Test_Type_ID])
+REFERENCES [dbo].[Test_Types] ([Test_Type_ID])
+GO
+ALTER TABLE [dbo].[Hourly_Test_Status]  WITH CHECK ADD FOREIGN KEY([User_ID])
+REFERENCES [dbo].[Users] ([User_ID])
+GO
+ALTER TABLE [dbo].[Hourly_Test_Status]  WITH CHECK ADD FOREIGN KEY([User_ID])
+REFERENCES [dbo].[Users] ([User_ID])
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Permissions](
+	[Permission_ID] [int] NOT NULL,
+	[Permission_Name] [nvarchar](250) NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Permissions] ADD PRIMARY KEY CLUSTERED 
+(
+	[Permission_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Predefined_Hourly_Limits](
+	[Predefined_Hourly_Limit_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Predefined_Hourly_Limit_Name] [varchar](255) NOT NULL,
+	[Trigger_Hours_List] [varchar](max) NOT NULL,
+	[Applied_Resources_ID_List] [varchar](max) NOT NULL,
+	[Applied_Resources_Limit_Values_List] [varchar](max) NOT NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Predefined_Hourly_Limits] ADD  CONSTRAINT [PK_Predefined_Hourly_Limits] PRIMARY KEY CLUSTERED 
+(
+	[Predefined_Hourly_Limit_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Predefined_Resource_Limits](
+	[Predefined_Limit_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Resource_Type_ID] [int] NOT NULL,
+	[Predefined_Limit] [float] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Predefined_Resource_Limits]  WITH CHECK ADD FOREIGN KEY([Resource_Type_ID])
+REFERENCES [dbo].[Resource_Types] ([Resource_Type_ID])
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Predefined_Resource_Usage](
+	[Predefined_Usage_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Resource_Type_ID] [int] NOT NULL,
+	[Resource_Used] [float] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Predefined_Resource_Usage] ADD PRIMARY KEY CLUSTERED 
+(
+	[Predefined_Usage_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Predefined_Resource_Usage]  WITH CHECK ADD FOREIGN KEY([Resource_Type_ID])
+REFERENCES [dbo].[Resource_Types] ([Resource_Type_ID])
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Resource_Limits](
+	[Limit_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Status_ID] [int] NOT NULL,
+	[Resource_Type_ID] [int] NOT NULL,
+	[Resource_Limit] [float] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Resource_Limits] ADD PRIMARY KEY CLUSTERED 
+(
+	[Limit_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Resource_Limits]  WITH CHECK ADD FOREIGN KEY([Resource_Type_ID])
+REFERENCES [dbo].[Resource_Types] ([Resource_Type_ID])
+GO
+ALTER TABLE [dbo].[Resource_Limits]  WITH CHECK ADD FOREIGN KEY([Resource_Type_ID])
+REFERENCES [dbo].[Resource_Types] ([Resource_Type_ID])
+GO
+ALTER TABLE [dbo].[Resource_Limits]  WITH CHECK ADD FOREIGN KEY([Status_ID])
+REFERENCES [dbo].[Hourly_Test_Status] ([Status_ID])
+GO
+ALTER TABLE [dbo].[Resource_Limits]  WITH CHECK ADD FOREIGN KEY([Status_ID])
+REFERENCES [dbo].[Hourly_Test_Status] ([Status_ID])
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Resource_Types](
+	[Resource_Type_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Resource_Type_Name] [nvarchar](250) NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Resource_Types] ADD PRIMARY KEY CLUSTERED 
+(
+	[Resource_Type_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Resource_Usage](
+	[Usage_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Status_ID] [int] NOT NULL,
+	[Resource_Type_ID] [int] NOT NULL,
+	[Resource_Used] [float] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Resource_Usage] ADD PRIMARY KEY CLUSTERED 
+(
+	[Usage_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Resource_Usage]  WITH CHECK ADD FOREIGN KEY([Resource_Type_ID])
+REFERENCES [dbo].[Resource_Types] ([Resource_Type_ID])
+GO
+ALTER TABLE [dbo].[Resource_Usage]  WITH CHECK ADD FOREIGN KEY([Resource_Type_ID])
+REFERENCES [dbo].[Resource_Types] ([Resource_Type_ID])
+GO
+ALTER TABLE [dbo].[Resource_Usage]  WITH CHECK ADD FOREIGN KEY([Status_ID])
+REFERENCES [dbo].[Hourly_Test_Status] ([Status_ID])
+GO
+ALTER TABLE [dbo].[Resource_Usage]  WITH CHECK ADD FOREIGN KEY([Status_ID])
+REFERENCES [dbo].[Hourly_Test_Status] ([Status_ID])
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Scheduling_Rules](
+	[Rule_ID] [int] IDENTITY(1,1) NOT NULL,
+	[User_ID] [int] NOT NULL,
+	[Test_Type_ID] [int] NOT NULL,
+	[Start_Date] [date] NULL,
+	[End_Date] [date] NULL,
+	[Allowed] [bit] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Scheduling_Rules]  WITH CHECK ADD FOREIGN KEY([Test_Type_ID])
+REFERENCES [dbo].[Test_Types] ([Test_Type_ID])
+GO
+ALTER TABLE [dbo].[Scheduling_Rules]  WITH CHECK ADD FOREIGN KEY([User_ID])
+REFERENCES [dbo].[Users] ([User_ID])
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Specific_Datetime_Limits](
+	[Specific_Datetime_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Datetime] [datetime] NOT NULL,
+	[Resource_ID] [int] NOT NULL,
+	[Limit] [float] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Specific_Datetime_Limits] ADD  CONSTRAINT [PK_Specific_Datetime_Limits] PRIMARY KEY CLUSTERED 
+(
+	[Specific_Datetime_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Specific_Datetime_Limits]  WITH CHECK ADD  CONSTRAINT [FK_Specific_Datetime_Limits_Resource_Types] FOREIGN KEY([Resource_ID])
+REFERENCES [dbo].[Resource_Types] ([Resource_Type_ID])
+GO
+ALTER TABLE [dbo].[Specific_Datetime_Limits] CHECK CONSTRAINT [FK_Specific_Datetime_Limits_Resource_Types]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Test_Types](
+	[Test_Type_ID] [int] NOT NULL,
+	[Test_Type_Name] [nvarchar](250) NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Test_Types] ADD PRIMARY KEY CLUSTERED 
+(
+	[Test_Type_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[User_Access_Test_Types](
+	[Access_Type_ID] [int] NOT NULL,
+	[Test_Type_ID] [int] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[User_Access_Test_Types] ADD PRIMARY KEY CLUSTERED 
+(
+	[Access_Type_ID] ASC,
+	[Test_Type_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[User_Access_Test_Types]  WITH CHECK ADD FOREIGN KEY([Access_Type_ID])
+REFERENCES [dbo].[Access_Types] ([Access_Type_ID])
+GO
+ALTER TABLE [dbo].[User_Access_Test_Types]  WITH CHECK ADD FOREIGN KEY([Access_Type_ID])
+REFERENCES [dbo].[Access_Types] ([Access_Type_ID])
+GO
+ALTER TABLE [dbo].[User_Access_Test_Types]  WITH CHECK ADD FOREIGN KEY([Test_Type_ID])
+REFERENCES [dbo].[Test_Types] ([Test_Type_ID])
+GO
+ALTER TABLE [dbo].[User_Access_Test_Types]  WITH CHECK ADD FOREIGN KEY([Test_Type_ID])
+REFERENCES [dbo].[Test_Types] ([Test_Type_ID])
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[User_Permissions](
+	[User_ID] [int] NOT NULL,
+	[Permission_ID] [int] NOT NULL,
+	[Allowed] [bit] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[User_Permissions] ADD PRIMARY KEY CLUSTERED 
+(
+	[User_ID] ASC,
+	[Permission_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[User_Permissions]  WITH CHECK ADD FOREIGN KEY([Permission_ID])
+REFERENCES [dbo].[Permissions] ([Permission_ID])
+GO
+ALTER TABLE [dbo].[User_Permissions]  WITH CHECK ADD FOREIGN KEY([Permission_ID])
+REFERENCES [dbo].[Permissions] ([Permission_ID])
+GO
+ALTER TABLE [dbo].[User_Permissions]  WITH CHECK ADD FOREIGN KEY([Permission_ID])
+REFERENCES [dbo].[Permissions] ([Permission_ID])
+GO
+ALTER TABLE [dbo].[User_Permissions]  WITH CHECK ADD FOREIGN KEY([User_ID])
+REFERENCES [dbo].[Users] ([User_ID])
+GO
+ALTER TABLE [dbo].[User_Permissions]  WITH CHECK ADD FOREIGN KEY([User_ID])
+REFERENCES [dbo].[Users] ([User_ID])
+GO
+ALTER TABLE [dbo].[User_Permissions]  WITH CHECK ADD FOREIGN KEY([User_ID])
+REFERENCES [dbo].[Users] ([User_ID])
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Users](
+	[User_ID] [int] NOT NULL,
+	[Username] [nvarchar](250) NOT NULL,
+	[Password] [nvarchar](250) NOT NULL,
+	[Access_Type_ID] [int] NOT NULL,
+	[Role_ID] [int] NULL,
+	[Tests_It_Can_Modify] [varchar](255) NULL,
+	[Can_View_Any_Test] [int] NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Users] ADD PRIMARY KEY CLUSTERED 
+(
+	[User_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Users]  WITH CHECK ADD FOREIGN KEY([Access_Type_ID])
+REFERENCES [dbo].[Access_Types] ([Access_Type_ID])
+GO
+ALTER TABLE [dbo].[Users]  WITH CHECK ADD FOREIGN KEY([Access_Type_ID])
+REFERENCES [dbo].[Access_Types] ([Access_Type_ID])
+GO
+ALTER TABLE [dbo].[Users]  WITH CHECK ADD FOREIGN KEY([Access_Type_ID])
+REFERENCES [dbo].[Access_Types] ([Access_Type_ID])
+GO
+ALTER TABLE [dbo].[Users]  WITH CHECK ADD FOREIGN KEY([Access_Type_ID])
+REFERENCES [dbo].[Access_Types] ([Access_Type_ID])
+GO
