@@ -1,0 +1,13 @@
+.tasks-container,
+.day-container,
+.calendar {
+  margin: auto;
+  display: block;
+  text-align: center;
+}
+
+.day-container button {
+  background-color: gray;
+  color: white;
+  background: linear-gradient(3deg, #b85225 10%, #178c06 5%);
+}

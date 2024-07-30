@@ -1,0 +1,857 @@
+:root {
+  --primary-bg-color: #2a2a2a;
+  --secondary-bg-color: #1c1c1c;
+  --primary-text-color: #e0e6ed;
+  --primary-border-color: #6bc1c6;
+
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --primary-btn-color: #5b9bd5;
+  --hover-btn-color: #4178a7;
+}
+
+body,
+h1,
+h2,
+p,
+ul,
+li,
+label {
+  margin: auto;
+  padding: 0;
+  text-shadow: #1c1c1c 0 0 15px;
+}
+
+body {
+  background-color: var(--secondary-bg-color);
+  font-family: Arial, sans-serif;
+  color: var(--primary-text-color);
+}
+
+#calendar {
+  margin: auto;
+  justify-content: center;
+}
+
+header {
+  background-color: var(--primary-bg-color);
+  padding: 10px 0;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 24px;
+  margin: 0;
+}
+
+label {
+  margin-bottom: 5px;
+  display: block;
+}
+
+select,
+button {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 5px;
+}
+
+#exitButton {
+  background: #8e0000;
+  background: -moz-linear-gradient(0deg, #8e0000 8%, #7f3300 90%);
+  background: -webkit-linear-gradient(0deg, #8e0000 8%, #7f3300 90%);
+  background: linear-gradient(0deg, #8e0000 8%, #7f3300 90%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#8e0000",endColorstr="#7f3300",GradientType=1);
+  margin: 15px;
+  float: right;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+#logoutButton,
+#goBackButton {
+  margin: 15px;
+  float: right;
+  background: #5d5d5d;
+  background: -moz-linear-gradient(0deg, #5d5d5d 8%, #a4a4a4 90%);
+  background: -webkit-linear-gradient(0deg, #5d5d5d 8%, #a4a4a4 90%);
+  background: linear-gradient(0deg, #5d5d5d 8%, #a4a4a4 90%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#5d5d5d",endColorstr="#a4a4a4",GradientType=1);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+#exitButton:hover {
+  background-color: #d32f2f;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  width: 1300px;
+  border: 1px solid var(--primary-border-color);
+  background-color: #304bb5e5;
+  box-shadow: 0 0 5px var(--shadow-color);
+  padding: 20px;
+  height: auto;
+}
+.day {
+  padding: 10px;
+  border: 1px solid #dfffc5;
+}
+
+.day-of-week {
+  background: rgb(0, 53, 148);
+
+  background: linear-gradient(0deg, #fffbd1 8%, rgb(65 123 233) 90%);
+  text-shadow: #1c1c1c 0 0 3px, #000000 0 0 3px, #000000 0 0 8px;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#003594",endColorstr="#1562c4",GradientType=1);
+  font-weight: bold;
+}
+
+#resources_display {
+  z-index: 9999999;
+  background-color: var(--primary-bg-color);
+  box-shadow: 0 0 5px var(--shadow-color);
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.resource {
+  margin-bottom: 10px;
+}
+
+.numeric_value {
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+#save {
+  background: rgb(0, 53, 148);
+  color: white;
+  background: linear-gradient(
+    0deg,
+    rgb(127, 171, 254) 8%,
+    rgba(21, 98, 196, 1) 90%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#003594",endColorstr="#1562c4",GradientType=1);
+  color: var(--primary-text-color);
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#save:hover {
+  background: rgb(0, 53, 148);
+
+  background: linear-gradient(
+    0deg,
+    rgb(127, 171, 254) 8%,
+    rgb(106, 164, 240) 90%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#003594",endColorstr="#1562c4",GradientType=1);
+  color: var(--primary-text-color);
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  scale: 1.05;
+}
+
+#Show {
+  background: rgb(0, 53, 148);
+  color: white;
+  background: linear-gradient(0deg, rgb(24, 140, 6) 8%, rgb(38, 196, 21) 90%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#003594",endColorstr="#1562c4",GradientType=1);
+  color: var(--primary-text-color);
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#Show:hover {
+  background: rgb(0, 53, 148);
+
+  background: linear-gradient(
+    0deg,
+    rgb(20, 171, 70) 8%,
+    rgb(108, 240, 106) 90%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#003594",endColorstr="#1562c4",GradientType=1);
+  color: var(--primary-text-color);
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  scale: 1.05;
+}
+
+.tasks {
+  display: flex;
+  flex-direction: column;
+}
+
+.task {
+  display: inline-box;
+  margin: 15px 0;
+  padding: 10px;
+  border: 1px solid var(--primary-text-color);
+  border-radius: 5px;
+  background: rgb(37, 38, 39);
+
+  background: linear-gradient(333deg, rgb(0 0 0) 15%, #673ab7 93%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#252627",endColorstr="#4c535e",GradientType=1);
+  cursor: pointer;
+}
+
+.task.scheduled {
+  background: green;
+  color: white;
+  font-weight: bold;
+}
+
+#top-nav {
+  display: inline-flex;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#top-nav * {
+  display: inline-flex;
+
+  margin: auto;
+
+  margin-left: 15px;
+}
+
+.logo {
+  display: block;
+  margin: auto;
+  float: right;
+  margin: 10px;
+  width: 100px;
+  filter: drop-shadow(5px 5px 7px rgba(255, 254, 254, 0.5));
+}
+
+#asp {
+  height: 45px;
+}
+
+#resources_display {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #b7daff;
+  border-radius: 5px;
+
+  backdrop-filter: blur(5px);
+}
+
+#closeresources {
+  float: right;
+  background-color: #0056b3;
+  color: #b7daff;
+  border: #1e1e1e 3px solid;
+  border-radius: 50%;
+}
+
+.red {
+  background-color: red;
+}
+
+#edittestvars {
+  background: rgb(166, 215, 160);
+  background: -moz-linear-gradient(
+    0deg,
+    rgba(135, 182, 90, 1) 16%,
+    rgba(22, 156, 40, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    0deg,
+    rgba(135, 182, 90, 1) 16%,
+    rgba(22, 156, 40, 1) 100%
+  );
+  background: linear-gradient(
+    0deg,
+    rgba(135, 182, 90, 1) 16%,
+    rgba(22, 156, 40, 1) 100%
+  );
+  text-decoration: none;
+  border: none;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+#edittestvars:hover {
+  background: -moz-linear-gradient(
+    6deg,
+    rgba(166, 215, 160, 1) 25%,
+    rgba(255, 255, 255, 1) 83%
+  );
+  background: -webkit-linear-gradient(
+    6deg,
+    rgba(166, 215, 160, 1) 25%,
+    rgba(255, 255, 255, 1) 83%
+  );
+  background: linear-gradient(
+    6deg,
+    rgba(166, 215, 160, 1) 25%,
+    rgba(255, 255, 255, 1) 83%
+  );
+  transform: scale(1.05);
+}
+
+.view_resources_btn {
+  opacity: 0.2;
+
+  background: linear-gradient(235deg, #ffeb3b 15%, rgba(255, 255, 255, 1) 93%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d7c3a0",endColorstr="#ffffff",GradientType=1);
+}
+
+.dropdownTaskTypeselect {
+  position: fixed !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+
+  display: block !important;
+  margin: auto;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 100px;
+  border: 2px solid #b7daff !important;
+  border-radius: 5px !important;
+  backdrop-filter: blur(5px) !important;
+  z-index: 999999 !important;
+}
+
+.dropdownTaskTypeselect * {
+  display: block !important;
+  margin: auto;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.dropdownTaskTypeselect button,
+.dropdownTaskTypeselect select,
+.dropdownTaskTypeselect label {
+  width: 200px;
+}
+
+.dropdownTaskTypeselect button:first-of-type {
+  background: rgb(135, 182, 90);
+  background: -moz-linear-gradient(
+    0deg,
+    rgba(135, 182, 90, 1) 16%,
+    rgba(22, 156, 40, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    0deg,
+    rgba(135, 182, 90, 1) 16%,
+    rgba(22, 156, 40, 1) 100%
+  );
+  background: linear-gradient(
+    0deg,
+    rgba(135, 182, 90, 1) 16%,
+    rgba(22, 156, 40, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#87b65a",endColorstr="#169c28",GradientType=1);
+  color: #ffffffe3 !important;
+}
+
+.dropdownTaskTypeselect button:nth-last-of-type(1) {
+  background: rgb(182, 94, 90);
+  background: -moz-linear-gradient(
+    0deg,
+    rgba(182, 94, 90, 1) 16%,
+    rgba(156, 85, 22, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    0deg,
+    rgba(182, 94, 90, 1) 16%,
+    rgba(156, 85, 22, 1) 100%
+  );
+  background: linear-gradient(
+    0deg,
+    rgba(182, 94, 90, 1) 16%,
+    rgba(156, 85, 22, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#b65e5a",endColorstr="#9c5516",GradientType=1);
+  color: #ffffffe3 !important;
+}
+
+.remove-task-from-day {
+  color: white;
+  font-size: 12px;
+  background-color: rgb(255, 92, 92);
+  padding: 5px;
+}
+
+.task-res-usage {
+  color: white;
+  background-color: rgb(42, 111, 138);
+  font-size: 12px;
+  padding: 5px;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  padding-bottom: 0;
+}
+
+.task label {
+  flex: 1;
+  align-self: center; /* Align the label vertically with the trash icon */
+  padding-bottom: 8px;
+}
+.add_task_btn {
+  background: rgb(166, 215, 160);
+  background: -moz-linear-gradient(
+    0deg,
+    rgba(135, 182, 90, 1) 16%,
+    rgba(22, 156, 40, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    0deg,
+    rgba(135, 182, 90, 1) 16%,
+    rgba(22, 156, 40, 1) 100%
+  );
+  background: linear-gradient(
+    0deg,
+    rgba(135, 182, 90, 1) 16%,
+    rgba(22, 156, 40, 1) 100%
+  );
+
+  border: none;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.add_task_btn:hover {
+  background: -moz-linear-gradient(
+    6deg,
+    rgba(166, 215, 160, 1) 25%,
+    rgba(255, 255, 255, 1) 83%
+  );
+  background: -webkit-linear-gradient(
+    6deg,
+    rgba(166, 215, 160, 1) 25%,
+    rgba(255, 255, 255, 1) 83%
+  );
+  background: linear-gradient(
+    6deg,
+    rgba(166, 215, 160, 1) 25%,
+    rgba(255, 255, 255, 1) 83%
+  );
+  transform: scale(1.05);
+}
+.remove-task-from-day {
+  cursor: pointer;
+}
+
+.notification {
+  background-color: rgb(31, 88, 145);
+  color: white;
+  text-align: center;
+  padding: 5px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999999999;
+  pointer-events: none;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.notification_err {
+  background-color: #e74c3c;
+  color: white;
+  text-align: center;
+  padding: 5px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999999999;
+  pointer-events: none;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.notification {
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: slideIn 0.5s ease-in-out forwards;
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.exitAnimate {
+  animation: slideOut 0.5s ease-in-out forwards;
+}
+
+.hide {
+  display: none;
+}
+
+.black-and-white {
+  filter: grayscale(100%);
+}
+
+#which-test-which {
+  display: block;
+}
+
+#whichTestWhichDiv {
+  background: rgb(90, 168, 182);
+  background: -moz-linear-gradient(
+    0deg,
+    rgba(90, 168, 182, 1) 16%,
+    rgba(0, 130, 180, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    0deg,
+    rgba(90, 168, 182, 1) 16%,
+    rgba(0, 130, 180, 1) 100%
+  );
+  background: linear-gradient(
+    0deg,
+    rgba(90, 168, 182, 1) 16%,
+    rgba(0, 130, 180, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#5aa8b6",endColorstr="#0082b4",GradientType=1);
+  padding: 10px; /* Add some padding for spacing */
+  border: 1px solid #00b7ff; /* Add a border */
+  margin: 5x; /* Add margin to create space around the div */
+  margin-left: 30px;
+  border-radius: 5px;
+  padding-right: 2px !important;
+  padding-right: 2px !important;
+}
+@media (min-width: 1770px) {
+  #whichTestWhichDiv {
+    padding-right: 233px !important;
+    padding-right: 233px !important;
+  }
+}
+#calendarIcoSpan {
+  float: inline-start;
+  top: 0;
+  left: 5px;
+}
+
+.shadow {
+  position: absolute !important;
+  z-index: 9999 !important;
+  background-color: #000000e3;
+  top: 0;
+  width: 200vw;
+  height: 200vh;
+
+  display: flex !important;
+}
+
+.shadow .dropdownTaskTypeselect label .fa-gear {
+  width: 9% !important;
+}
+
+.shadow .dropdownTaskTypeselect .btn-in-typeengine i {
+  width: 2% !important;
+  display: inline !important;
+}
+#enginetypelabel * {
+  display: inline !important;
+}
+
+.bg-img {
+  position: fixed;
+  display: flex;
+  top: 0;
+  left: 0;
+  opacity: 0.2;
+  width: 110vw;
+  height: 100vh;
+  z-index: -1;
+}
+
+#logosdiv {
+  display: flex;
+  justify-content: space-between;
+  margin: auto;
+  padding-right: 150px;
+  padding-left: 5px;
+  padding-bottom: 10px;
+  float: right;
+  margin: 10px;
+  width: 100px;
+  background-color: rgba(148, 212, 255, 0.236);
+  margin-right: 0;
+  margin-top: 0;
+  border-radius: 0 0 0 30px;
+}
+
+.bugged-days-img {
+  width: 150px;
+}
+
+#calendarAbove {
+  display: block;
+
+  text-align: center;
+  margin: 0 auto;
+  padding: 7px;
+  width: 66% !important;
+  background: rgb(224, 128, 63);
+  background: -moz-linear-gradient(
+    180deg,
+    rgba(224, 128, 63, 1) 18%,
+    rgba(172, 51, 14, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    rgba(224, 128, 63, 1) 18%,
+    rgba(172, 51, 14, 1) 100%
+  );
+  background: linear-gradient(
+    180deg,
+    rgba(224, 128, 63, 1) 18%,
+    rgba(172, 51, 14, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e0803f",endColorstr="#ac330e",GradientType=1);
+  border-radius: 10px 10px 0 0;
+}
+
+#calendarAbove:hover {
+  background: rgb(236, 180, 142);
+  background: -moz-linear-gradient(
+    180deg,
+    rgba(236, 180, 142, 1) 18%,
+    rgba(186, 93, 64, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    rgba(236, 180, 142, 1) 18%,
+    rgba(186, 93, 64, 1) 100%
+  );
+  background: linear-gradient(
+    180deg,
+    rgba(236, 180, 142, 1) 18%,
+    rgba(186, 93, 64, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ecb48e",endColorstr="#ba5d40",GradientType=1);
+}
+#switch-to-table-view {
+  color: white;
+  text-decoration: none;
+}
+
+#div-for-range-start-dropdowns {
+  padding: 10px;
+  border-radius: 10px;
+  background: linear-gradient(
+    180deg,
+    rgb(114, 75, 213) 18%,
+    rgb(117, 14, 172) 100%
+  );
+}
+
+#div-for-range-end-dropdowns {
+  padding: 10px;
+  border-radius: 10px;
+  background: linear-gradient(
+    180deg,
+    rgba(224, 128, 63, 1) 18%,
+    rgba(172, 51, 14, 1) 100%
+  );
+}
+
+#tasks-container {
+  padding: 20px;
+}
+
+#tasks-container .task {
+  padding: 20px;
+  width: 1200px;
+  background: linear-gradient(
+    180deg,
+    rgb(10, 39, 95) 18%,
+    rgb(13, 113, 156) 100%
+  );
+}
+
+#tasks-container .task button {
+  float: right;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.view-resource-usage-button {
+  color: white;
+  background: rgb(0, 135, 70);
+  background: -moz-linear-gradient(
+    180deg,
+    rgba(0, 135, 70, 1) 7%,
+    rgba(83, 189, 0, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    rgba(0, 135, 70, 1) 7%,
+    rgba(83, 189, 0, 1) 100%
+  );
+  background: linear-gradient(
+    180deg,
+    rgba(0, 135, 70, 1) 7%,
+    rgba(83, 189, 0, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#008746",endColorstr="#53bd00",GradientType=1);
+}
+
+.view-resource-limits-button {
+  color: white;
+  background: rgb(127, 0, 135);
+  background: -moz-linear-gradient(
+    180deg,
+    rgba(127, 0, 135, 1) 7%,
+    rgba(111, 0, 189, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    rgba(127, 0, 135, 1) 7%,
+    rgba(111, 0, 189, 1) 100%
+  );
+  background: linear-gradient(
+    180deg,
+    rgba(127, 0, 135, 1) 7%,
+    rgba(111, 0, 189, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#7f0087",endColorstr="#6f00bd",GradientType=1);
+}
+
+.editbtn {
+  color: white;
+  background: rgb(0, 127, 135);
+  background: -moz-linear-gradient(
+    180deg,
+    rgba(0, 127, 135, 1) 7%,
+    rgba(0, 189, 184, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    rgba(0, 127, 135, 1) 7%,
+    rgba(0, 189, 184, 1) 100%
+  );
+  background: linear-gradient(
+    180deg,
+    rgba(0, 127, 135, 1) 7%,
+    rgba(0, 189, 184, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#007f87",endColorstr="#00bdb8",GradientType=1);
+}
+
+.deletebtn {
+  color: white;
+  background: rgb(255, 0, 0);
+  background: -moz-linear-gradient(
+    180deg,
+    rgba(255, 0, 0, 1) 7%,
+    rgba(255, 124, 0, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    rgba(255, 0, 0, 1) 7%,
+    rgba(255, 124, 0, 1) 100%
+  );
+  background: linear-gradient(
+    180deg,
+    rgba(255, 0, 0, 1) 7%,
+    rgba(255, 124, 0, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff0000",endColorstr="#ff7c00",GradientType=1);
+}
+#UI-BLOCKER {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999999999999999999999999999;
+  background-color: #0000aa;
+  box-shadow: 0 0 5px var(--shadow-color);
+  padding: 20px;
+  margin-top: 0px;
+  cursor: not-allowed;
+  user-select: none; /* Prevent text selection */
+}
+
+#UI-BLOCKER h1 {
+  text-align: center;
+  display: block;
+  margin: auto;
+  margin-top: 30vh;
+  color: white;
+  width: 80%;
+}
+
+/*
+
+HIDE RES LIMIT BUTTONS OF TASKS CUZ WE DONT NEED 9999999 DEFAULTS
+
+
+  */
+
+.view-resource-limits-button {
+  display: none;
+}

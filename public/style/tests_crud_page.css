@@ -1,0 +1,499 @@
+/* Modal Styles */
+.modal {
+  color: black;
+  text-shadow: none !important;
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+  color: black;
+  text-shadow: none !important;
+
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+  max-width: 600px; /* Set a max-width for the modal */
+  border-radius: 10px;
+}
+
+.close,
+.close2 {
+  text-shadow: none !important;
+
+  color: #000000;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  text-shadow: none !important;
+
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#taskForm label {
+  color: black;
+  text-shadow: none !important;
+
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+#taskForm {
+  padding: 20px;
+}
+#taskForm input,
+#taskForm button {
+  color: black;
+  text-shadow: none !important;
+
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+#taskForm button {
+  text-shadow: none !important;
+
+  background-color: #454ca0;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+#taskForm button:hover {
+  text-shadow: none !important;
+
+  background-color: #454ca0;
+}
+
+/* ID Bindings Section */
+#id-bindings-container {
+  color: black;
+  text-shadow: none !important;
+
+  background-color: #f9f9f9;
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+#id-bindings-container h3 {
+  text-shadow: none !important;
+
+  margin-top: 0;
+}
+
+#id-bindings-container h4 {
+  text-shadow: none !important;
+
+  margin-bottom: 10px;
+}
+
+#id-bindings-container p {
+  text-shadow: none !important;
+
+  margin: 5px 0;
+  padding: 10px;
+  background-color: #e7f3fe;
+  border-left: 6px solid #2196f3;
+  border-radius: 5px;
+}
+
+.task button {
+  float: right;
+  margin-left: 10px;
+}
+
+.resource-usage-container,
+.resource-limits-container {
+  text-align: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px;
+  padding: 20px;
+  background-color: rgb(69, 75, 116);
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  z-index: 1000;
+}
+
+.resource-usage-container h4,
+.resource-limits-container h4 {
+  margin-top: 0;
+  font-size: 18px;
+  text-align: center;
+  text-shadow: none !important;
+}
+
+.resource-usage-container p,
+.resource-limits-container p {
+  text-shadow: none !important;
+
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+#tasks-container {
+  position: relative;
+}
+
+.closePop {
+  right: 10px;
+  top: 0;
+  position: absolute;
+  cursor: pointer;
+  font: 1em sans-serif;
+}
+
+.task {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.task button {
+  margin-left: 10px;
+}
+
+#test-user-can-modify {
+  top: 10px;
+  display: inline-flex;
+  left: 50%;
+  text-align: center;
+  transform: translateX(50%);
+  background-color: #2d2d2d;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ffffff78;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1em;
+  list-style-type: none;
+}
+
+#test-user-can-modify li {
+  margin: 0px 10px;
+  padding: 0px 20px;
+  border-left: #ffffff 1px solid;
+  list-style-type: none;
+  font-weight: bold;
+  color: greenyellow;
+}
+
+#test-user-can-modify li:nth-child(2) {
+  border-left: none !important;
+}
+
+#addNewTest {
+  color: white;
+  background: rgb(46, 172, 215);
+  background: -moz-linear-gradient(
+    180deg,
+    rgba(46, 172, 215, 1) 7%,
+    rgba(0, 147, 189, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    rgba(46, 172, 215, 1) 7%,
+    rgba(0, 147, 189, 1) 100%
+  );
+  background: linear-gradient(
+    180deg,
+    rgba(46, 172, 215, 1) 7%,
+    rgba(0, 147, 189, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#2eacd7",endColorstr="#0093bd",GradientType=1);
+}
+
+#showHourlyLimits {
+  color: white;
+  background: rgb(128, 46, 215);
+  background: -moz-linear-gradient(
+    180deg,
+    rgba(128, 46, 215, 1) 7%,
+    rgba(127, 0, 189, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    rgba(128, 46, 215, 1) 7%,
+    rgba(127, 0, 189, 1) 100%
+  );
+  background: linear-gradient(
+    180deg,
+    rgba(128, 46, 215, 1) 7%,
+    rgba(127, 0, 189, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#802ed7",endColorstr="#7f00bd",GradientType=1);
+}
+
+#showIdBindings {
+  color: white;
+  background: rgb(215, 131, 46);
+  background: -moz-linear-gradient(
+    180deg,
+    rgba(215, 131, 46, 1) 7%,
+    rgba(189, 76, 0, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    rgba(215, 131, 46, 1) 7%,
+    rgba(189, 76, 0, 1) 100%
+  );
+  background: linear-gradient(
+    180deg,
+    rgba(215, 131, 46, 1) 7%,
+    rgba(189, 76, 0, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d7832e",endColorstr="#bd4c00",GradientType=1);
+}
+#UI-BLOCKER {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999999999999999999999999999;
+  background-color: #0000aa;
+  box-shadow: 0 0 5px var(--shadow-color);
+  padding: 20px;
+  margin-top: 0px;
+  cursor: not-allowed;
+  user-select: none; /* Prevent text selection */
+}
+
+#UI-BLOCKER h1 {
+  text-align: center;
+  display: block;
+  margin: auto;
+  margin-top: 30vh;
+  color: white;
+  width: 80%;
+}
+
+/*
+
+HIDE RES LIMIT BUTTONS OF TASKS CUZ WE DONT NEED 9999999 DEFAULTS
+
+
+  */
+
+.view-resource-limits-button {
+  display: none;
+}
+
+.grouped-task {
+  border-color: rgb(0, 255, 0);
+}
+
+.grouped-tasks-container {
+  background-color: #fff70067;
+  width: min-content;
+  text-align: center;
+  justify-content: center;
+  display: block;
+  margin: auto;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.grouped-tasks-container .task {
+  background: linear-gradient(
+    354deg,
+    rgba(0, 194, 182, 1) 7%,
+    rgba(0, 127, 57, 1) 100%
+  ) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.expand-button,
+.collapse-button {
+  width: 1200px;
+  margin: 10px;
+  color: white;
+  background: rgb(222, 255, 170);
+  background: -moz-linear-gradient(
+    354deg,
+    rgba(222, 255, 170, 1) 7%,
+    rgba(84, 127, 0, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    354deg,
+    rgba(222, 255, 170, 1) 7%,
+    rgba(84, 127, 0, 1) 100%
+  );
+  background: linear-gradient(
+    354deg,
+    rgba(222, 255, 170, 1) 7%,
+    rgba(84, 127, 0, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#deffaa",endColorstr="#547f00",GradientType=1);
+  text-shadow: #000000 1px 1px 21px !important;
+  font-weight: 800;
+  font-size: 20px;
+  border-radius: 10px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+#dataModal .modal {
+  background-color: #ffffff;
+  margin: 5% auto;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 1000px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close:hover {
+  color: #333;
+}
+
+#dataModal h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 24px;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+#dataModal table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+#dataModal th,
+td {
+  border: 1px solid #e0e0e0;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+#dataModal th {
+  background-color: #3498db;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+#dataModal tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#dataModal tr:hover {
+  background-color: #f0f0f0;
+  transition: background-color 0.3s ease;
+}
+
+.resources {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.hidden {
+  display: none;
+}
+#id-bindings-container {
+  display: block;
+  max-height: 80vh; /* 80% of the viewport height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.close2 {
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #888;
+}
+
+.close2:hover {
+  color: #333;
+}
+
+#id-bindings-container h3 {
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #3498db;
+  color: #2c3e50;
+}
+
+#id-bindings-container h4 {
+  color: #3498db;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+#id-bindings-container p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+#id-bindings-container div {
+  margin-bottom: 20px;
+}
+#showDailyTestSummary{
+  width: 40vw;
+  display: block;
+  margin: auto;
+  margin-bottom: 100px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 800;
+  border-radius: 10px;
+  padding: 5px;
+  cursor: pointer;
+  color: white;
+  background: rgb(46, 215, 52);
+ 
+  background: linear-gradient(
+    180deg,
+    rgb(15, 125, 92) 7%,
+    rgb(0, 189, 110) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d7832e",endColorstr="#bd4c00",GradientType=1);
+}

@@ -1,0 +1,415 @@
+:root {
+  --primary-bg-color: #2b2e3b;
+  --secondary-bg-color: #1a1c28;
+  --primary-text-color: #d6e0f0;
+  --primary-border-color: rgb(85, 142, 155);
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --primary-btn-color: #006bbf;
+  --hover-btn-color: #004f8a;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--secondary-bg-color);
+  color: var(--primary-text-color);
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  margin: 20px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--primary-bg-color);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  border: 0 solid;
+}
+
+thead {
+  background-color: var(--primary-bg-color);
+  color: var(--primary-text-color);
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+}
+
+tbody tr:nth-child(even) {
+  background-color: var(--secondary-bg-color);
+}
+
+#saveButton {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: var(--primary-btn-color);
+  color: var(--primary-text-color);
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+#exitButton {
+  margin: 15px;
+  float: right;
+  background: rgb(129, 0, 0);
+  background: linear-gradient(
+    0deg,
+    rgba(129, 0, 0, 1) 8%,
+    rgba(126, 33, 0, 1) 90%
+  );
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+#logoutButton {
+  margin: 15px;
+  float: right;
+  background: rgb(93, 93, 93);
+  background: linear-gradient(
+    0deg,
+    rgba(93, 93, 93, 1) 8%,
+    rgba(164, 164, 164, 1) 90%
+  );
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+.notification {
+  background-color: rgb(27, 82, 129);
+  color: white;
+  text-align: center;
+  padding: 5px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999999999;
+  pointer-events: none;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.notification {
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: slideIn 0.5s ease-in-out forwards;
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.exitAnimate {
+  animation: slideOut 0.5s ease-in-out forwards;
+}
+
+.hide {
+  display: none;
+}
+
+#backButton {
+  background: linear-gradient(45deg, #001f3f, #07305c);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border: white 1px solid;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#backButton:hover {
+  background: linear-gradient(45deg, #98a5b3, #001f3f);
+}
+#exitButton:hover {
+  background-color: #d32f2f;
+}
+
+#saveButton:hover {
+  background-color: var(--hover-btn-color);
+}
+
+section {
+  text-align: center;
+  margin: 20px auto;
+  max-width: 600px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+select,
+input[type="number"],
+input[type="text"] {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+  border: 1px solid var(--primary-border-color);
+  border-radius: 5px;
+}
+
+#button-save-res-limit,
+#change-type-name-save {
+  background: rgb(0, 53, 148);
+  background: linear-gradient(
+    0deg,
+    rgba(0, 53, 148, 1) 8%,
+    rgba(21, 98, 196, 1) 90%
+  );
+  color: var(--primary-text-color);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#button-save-res-limit:hover,
+#change-type-name-save:hover {
+  background-color: var(--hover-btn-color);
+}
+
+#status-save-limit-change,
+#status-save-type-name-change {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+#span-nan-limit-old {
+  font-weight: bold;
+  color: var(--primary-text-color);
+}
+
+#current-test-type-name,
+#new-test-type-name {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+  border: 1px solid var(--primary-border-color);
+  border-radius: 5px;
+}
+
+#change-type-name-save {
+  background-color: var(--primary-btn-color);
+  color: var(--primary-text-color);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#change-type-name-save:hover {
+  background-color: var(--hover-btn-color);
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--primary-border-color);
+  margin: 20px 0;
+}
+
+#select-limit-type-dropdown {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+  border: 1px solid var(--primary-border-color);
+  border-radius: 5px;
+  background-color: var(--primary-bg-color);
+  color: var(--primary-text-color);
+}
+
+#button-save-res-limit {
+  background-color: var(--primary-btn-color);
+  color: var(--primary-text-color);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#button-save-res-limit:hover {
+  background-color: var(--hover-btn-color);
+}
+
+#which-test-which {
+  display: block;
+}
+
+#whichTestWhichDiv {
+  background-color: #343a45;
+  padding: 10px;
+  border: 1px solid #9bb6c0;
+  margin: 10px;
+  margin-left: 60px;
+  border-radius: 5px;
+  float: right;
+}
+
+table {
+  width: 180%;
+  border-collapse: collapse;
+  text-align: center;
+  margin-left: -40%;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+th {
+  background: rgb(22, 22, 22);
+  background: linear-gradient(
+    0deg,
+    rgba(22, 22, 22, 1) 8%,
+    rgba(51, 51, 51, 1) 90%
+  );
+}
+
+input[type="number"] {
+  width: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 8px 16px;
+  background: rgb(0, 53, 148);
+  background: linear-gradient(
+    0deg,
+    rgba(0, 53, 148, 1) 8%,
+    rgba(21, 98, 196, 1) 90%
+  );
+  color: var(--primary-text-color);
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+#taskspecresalloctable {
+  margin: auto;
+  width: auto;
+}
+
+table {
+  border-radius: 210px !important;
+}
+
+.bg-img {
+  position: fixed;
+  display: flex;
+  top: 0;
+  left: 0;
+  opacity: 0.2;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+}
+
+/* Style for the warning notification container */
+#warning-notification-static {
+  background-color: #fff3cd; /* Light yellow background */
+  border: 1px solid #ffeeba; /* Light yellow border */
+  color: #856404; /* Dark yellow text */
+  padding: 15px; /* Padding inside the container */
+  margin: 20px 0; /* Margin around the container */
+  border-radius: 5px; /* Rounded corners */
+  font-family: Arial, sans-serif; /* Font style */
+  font-size: 16px; /* Font size */
+}
+
+/* Style for the paragraph inside the container */
+#warning-notification-static p {
+  margin: 0; /* Remove default margin */
+}
+
+/* Style for the link inside the paragraph */
+#warning-notification-static a {
+  color: #004085; /* Dark blue link color */
+  text-decoration: underline; /* Underline the link */
+  font-weight: bold; /* Bold text */
+}
+
+#warning-notification-static a:hover {
+  color: #002752; /* Darker blue on hover */
+  text-decoration: none; /* Remove underline on hover */
+}
+#UI-BLOCKER {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999999999999999999999999999;
+  background-color: #0000aa;
+  box-shadow: 0 0 5px var(--shadow-color);
+  padding: 20px;
+  margin-top: 0px;
+  cursor: not-allowed;
+  user-select: none; /* Prevent text selection */
+}
+
+#UI-BLOCKER h1 {
+  text-align: center;
+  display: block;
+  margin: auto;
+  margin-top: 30vh;
+  color: white;
+  width: 80%;
+}
